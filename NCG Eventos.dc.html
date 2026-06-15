@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#C16B4F"/>
+  <circle cx="200" cy="158" r="46" fill="#DAAE4E"/>
+  <path d="M200 204 q 8 16 -2 30" stroke="#FBE3CF" stroke-width="2" fill="none"/>
+  <text x="200" y="288" font-family="Georgia, 'Times New Roman', serif" font-size="78" font-weight="700" letter-spacing="6" fill="#FCF6EC" text-anchor="middle">NCG</text>
+</svg>
+</template>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Jost', sans-serif; background: #F5EDE0; color: #4A3D30; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  ::selection { background: rgba(193,107,79,0.25); }
+  @keyframes ncgFloat { 0%,100% { transform: translateY(0) rotate(var(--r,0deg)); } 50% { transform: translateY(-22px) rotate(var(--r,0deg)); } }
+  @keyframes ncgFloatSlow { 0%,100% { transform: translateY(0) rotate(var(--r,0deg)); } 50% { transform: translateY(-14px) rotate(var(--r,0deg)); } }
+  @keyframes ncgDrift { 0%,100% { transform: translate(0,0); } 50% { transform: translate(14px,-10px); } }
+  @keyframes ncgRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes ncgFlyUp { 0% { transform: translateY(0) translateX(0) rotate(var(--r,0deg)); opacity:0; } 10% { opacity:1; } 88% { opacity:1; } 100% { transform: translateY(-118vh) translateX(var(--dx,30px)) rotate(var(--r,0deg)); opacity:0; } }
+  @keyframes ncgBlob { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(6%,-5%) scale(1.12); } 66% { transform: translate(-5%,4%) scale(0.94); } }
+  @keyframes ncgMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes ncgDraw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes ncgBounce { 0%,100% { transform: translate(-50%,0); } 50% { transform: translate(-50%,10px); } }
+  @keyframes ncgPulse { 0% { box-shadow: 0 0 0 0 rgba(37,211,102,0.5); } 70% { box-shadow: 0 0 0 16px rgba(37,211,102,0); } 100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); } }
+  @keyframes ncgReveal { from { opacity:0; transform: translateY(28px); } to { opacity:1; transform: translateY(0); } }
+</style>
+</helmet>
+
+<div style="position:relative;">
+
+  <!-- ============ NAV ============ -->
+  <nav style="position:fixed; top:0; left:0; right:0; z-index:50; display:flex; align-items:center; justify-content:space-between; padding:18px clamp(20px,5vw,64px); backdrop-filter:blur(12px); background:rgba(245,237,224,0.82); border-bottom:1px solid rgba(196,154,69,0.18);">
+    <a href="#inicio" style="display:flex; align-items:center; gap:13px; text-decoration:none;">
+      <span style="font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:600; letter-spacing:0.14em; color:#C49A45; line-height:1;">NCG</span>
+      <span style="width:1px; height:26px; background:rgba(74,61,48,0.2);"></span>
+      <span style="font-family:'Jost',sans-serif; font-size:12px; letter-spacing:0.32em; text-transform:uppercase; color:#6E6051;">Eventos</span>
+    </a>
+    <div style="display:flex; align-items:center; gap:clamp(16px,2.4vw,38px); flex-wrap:wrap;">
+      <a href="#servicios" style="font-size:14px; letter-spacing:0.06em; color:#4A3D30; text-decoration:none; transition:color .25s;" style-hover="color:#C16B4F">Servicios</a>
+      <a href="#alquileres" style="font-size:14px; letter-spacing:0.06em; color:#4A3D30; text-decoration:none; transition:color .25s;" style-hover="color:#C16B4F">Alquileres</a>
+      <a href="#galeria" style="font-size:14px; letter-spacing:0.06em; color:#4A3D30; text-decoration:none; transition:color .25s;" style-hover="color:#C16B4F">Galería</a>
+      <a href="{{ waHref }}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:9px; background:linear-gradient(120deg,#C16B4F,#D9683F); color:#FCF6EC; font-size:13.5px; letter-spacing:0.04em; padding:11px 20px; border-radius:999px; text-decoration:none; box-shadow:0 8px 22px -8px rgba(193,107,79,0.6); transition:transform .25s, box-shadow .25s;" style-hover="transform:translateY(-2px); box-shadow:0 14px 30px -8px rgba(193,107,79,0.75)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#FCF6EC"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20Zm4.4-5.6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.8 1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5s-.5-1.3-.7-1.7-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2c0 1.3 1 2.6 1.1 2.7s1.9 2.9 4.6 4c1.7.7 2.3.8 3.1.6.5-.1 1.4-.6 1.6-1.1s.2-1 .1-1.1-.2-.2-.4-.3Z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <header id="inicio" style="position:relative; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:140px clamp(20px,5vw,64px) 110px; overflow:hidden; background:#F7F0E4;">
+
+    <!-- animated color blobs -->
+    <div style="position:absolute; top:-8%; left:-6%; width:46vw; height:46vw; max-width:640px; max-height:640px; border-radius:50%; filter:blur(70px); background:radial-gradient(circle at 35% 35%, rgba(217,104,63,0.42), rgba(217,104,63,0) 68%); animation:ncgBlob 18s ease-in-out infinite;"></div>
+    <div style="position:absolute; bottom:-12%; right:-8%; width:50vw; height:50vw; max-width:720px; max-height:720px; border-radius:50%; filter:blur(80px); background:radial-gradient(circle at 50% 50%, rgba(218,174,78,0.45), rgba(218,174,78,0) 66%); animation:ncgBlob 22s ease-in-out infinite 2s;"></div>
+    <div style="position:absolute; top:30%; right:24%; width:34vw; height:34vw; max-width:460px; max-height:460px; border-radius:50%; filter:blur(72px); background:radial-gradient(circle at 50% 50%, rgba(224,153,126,0.38), rgba(224,153,126,0) 64%); animation:ncgBlob 16s ease-in-out infinite 1s;"></div>
+
+    <!-- decorative ring -->
+    <div style="position:absolute; top:50%; left:50%; width:min(78vw,820px); height:min(78vw,820px); transform:translate(-50%,-50%); border:1.5px solid rgba(196,154,69,0.28); border-radius:50%; animation:ncgRing 90s linear infinite;"></div>
+    <div style="position:absolute; top:50%; left:50%; width:min(64vw,680px); height:min(64vw,680px); transform:translate(-50%,-50%); border:1px dashed rgba(196,154,69,0.2); border-radius:50%;"></div>
+
+    <!-- balloons flying up on load -->
+    <div style="position:absolute; left:18%; bottom:-220px; z-index:1; --r:-6deg; --dx:40px; animation:ncgFlyUp 6s cubic-bezier(.33,.1,.4,1) .3s forwards;">{{ flyA }}</div>
+    <div style="position:absolute; left:46%; bottom:-260px; z-index:1; --r:8deg; --dx:-50px; animation:ncgFlyUp 7.4s cubic-bezier(.33,.1,.4,1) .9s forwards;">{{ flyB }}</div>
+    <div style="position:absolute; left:64%; bottom:-200px; z-index:1; --r:-10deg; --dx:30px; animation:ncgFlyUp 6.6s cubic-bezier(.33,.1,.4,1) 1.5s forwards;">{{ flyC }}</div>
+    <div style="position:absolute; left:80%; bottom:-240px; z-index:1; --r:5deg; --dx:-30px; animation:ncgFlyUp 8s cubic-bezier(.33,.1,.4,1) .6s forwards;">{{ flyD }}</div>
+
+    <!-- balloons (mouse parallax wrapper > float inner) -->
+    <div data-parallax="0.06" style="position:absolute; left:7%; top:24%; z-index:1;"><div style="--r:-8deg; animation:ncgFloat 7s ease-in-out infinite;">{{ balloonA }}</div></div>
+    <div data-parallax="0.1" style="position:absolute; left:13%; top:40%; z-index:1;"><div style="--r:6deg; animation:ncgFloatSlow 9s ease-in-out infinite;">{{ balloonB }}</div></div>
+    <div data-parallax="0.05" style="position:absolute; right:8%; top:30%; z-index:1;"><div style="--r:10deg; animation:ncgFloat 8s ease-in-out infinite .6s;">{{ balloonC }}</div></div>
+    <div data-parallax="0.12" style="position:absolute; right:14%; bottom:20%; z-index:1;"><div style="--r:-6deg; animation:ncgFloatSlow 10s ease-in-out infinite .3s;">{{ balloonD }}</div></div>
+
+    <div style="position:relative; z-index:2; text-align:center; max-width:940px;">
+      <div data-reveal style="display:inline-flex; align-items:center; gap:14px; margin-bottom:30px;">
+        <span style="height:1px; width:42px; background:rgba(196,154,69,0.7);"></span>
+        <span style="font-size:13px; letter-spacing:0.4em; text-transform:uppercase; color:#C49A45;">Eventos · by kokoa_te</span>
+        <span style="height:1px; width:42px; background:rgba(196,154,69,0.7);"></span>
+      </div>
+      <h1 data-reveal style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(38px,6vw,78px); line-height:1.04; color:#3F3328; letter-spacing:-0.015em;">
+        Organización, decoración<br>y alquiler para<br><span style="position:relative; display:inline-block;"><em style="font-style:italic; background:linear-gradient(90deg,#C16B4F 0%,#D9683F 45%,#DAAE4E 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;">eventos especiales</em><span style="position:absolute; left:0; right:0; bottom:-2px; height:5px; border-radius:5px; background:linear-gradient(90deg,#C16B4F,#DAAE4E); transform:scaleX(0); transform-origin:left; animation:ncgDraw .9s cubic-bezier(.22,.61,.36,1) forwards 1.1s;"></span></span>
+      </h1>
+      <p data-reveal style="margin:30px auto 0; max-width:560px; font-size:clamp(16px,1.5vw,19px); font-weight:300; line-height:1.7; color:#6E6051;">
+        Cuidamos cada detalle para que tu celebración tenga una presentación única. Cumpleaños, eventos infantiles, bautizos, comuniones y bodas.
+      </p>
+      <div data-reveal style="display:flex; align-items:center; justify-content:center; gap:18px; margin-top:42px; flex-wrap:wrap;">
+        <a href="{{ waHref }}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:10px; background:linear-gradient(120deg,#C16B4F,#D9683F); color:#FCF6EC; font-size:16px; letter-spacing:0.03em; padding:16px 32px; border-radius:999px; text-decoration:none; box-shadow:0 16px 34px -12px rgba(193,107,79,0.7); transition:transform .25s, box-shadow .25s;" style-hover="transform:translateY(-3px) scale(1.02); box-shadow:0 24px 48px -12px rgba(193,107,79,0.8)">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="#FCF6EC"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20Zm4.4-5.6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.8 1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5s-.5-1.3-.7-1.7-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2c0 1.3 1 2.6 1.1 2.7s1.9 2.9 4.6 4c1.7.7 2.3.8 3.1.6.5-.1 1.4-.6 1.6-1.1s.2-1 .1-1.1-.2-.2-.4-.3Z"/></svg>
+          Consultar por WhatsApp
+        </a>
+        <a href="#servicios" style="display:inline-flex; align-items:center; gap:9px; color:#4A3D30; font-size:16px; letter-spacing:0.03em; padding:16px 8px; text-decoration:none; border-bottom:1px solid rgba(74,61,48,0.25); transition:color .25s, border-color .25s;" style-hover="color:#C16B4F; border-color:#C16B4F">
+          Ver servicios →
+        </a>
+      </div>
+    </div>
+
+    <!-- scroll cue -->
+    <a href="#servicios" style="position:absolute; bottom:28px; left:50%; transform:translateX(-50%); z-index:2; animation:ncgBounce 2s ease-in-out infinite; text-decoration:none;">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C16B4F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </a>
+  </header>
+
+  <!-- ============ INTRO STRIP ============ -->
+  <section style="padding:clamp(56px,8vw,96px) clamp(20px,5vw,64px); background:#FBF5EA; text-align:center;">
+    <div data-reveal style="max-width:780px; margin:0 auto;">
+      <span style="font-size:13px; letter-spacing:0.34em; text-transform:uppercase; color:#C49A45;">Qué hacemos</span>
+      <p style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:clamp(26px,3.4vw,40px); line-height:1.4; color:#4A3D30; margin-top:22px;">
+        Acompañamos a cada cliente en la planificación, decoración y armado de su evento, con <em style="font-style:italic; color:#C16B4F;">orden, calidez y un estilo cuidado</em> de principio a fin.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ CELEBRATION MARQUEE ============ -->
+  <div style="background:linear-gradient(120deg,#C16B4F,#D9683F); padding:22px 0; overflow:hidden;">
+    <div style="display:inline-flex; align-items:center; white-space:nowrap; animation:ncgMarquee 28s linear infinite;" style-hover="animation-play-state:paused">
+      <span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:30px; color:#FCF6EC; padding:0 26px;">Eventos infantiles</span><span style="color:#FBE3CF; font-size:18px;">✦</span>
+      <span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:30px; color:#FCF6EC; padding:0 26px;">Cumpleaños</span><span style="color:#FBE3CF; font-size:18px;">✦</span>
+      <span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:30px; color:#FCF6EC; padding:0 26px;">Bautizos</span><span style="color:#FBE3CF; font-size:18px;">✦</span>
+      <span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:30px; color:#FCF6EC; padding:0 26px;">Comuniones</span><span style="color:#FBE3CF; font-size:18px;">✦</span>
+      <span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:30px; color:#FCF6EC; padding:0 26px;">Bodas</span><span style="color:#FBE3CF; font-size:18px;">✦</span>
+      <span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:30px; color:#FCF6EC; padding:0 26px;">Eventos infantiles</span><span style="color:#FBE3CF; font-size:18px;">✦</span>
+      <span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:30px; color:#FCF6EC; padding:0 26px;">Cumpleaños</span><span style="color:#FBE3CF; font-size:18px;">✦</span>
+      <span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:30px; color:#FCF6EC; padding:0 26px;">Bautizos</span><span style="color:#FBE3CF; font-size:18px;">✦</span>
+      <span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:30px; color:#FCF6EC; padding:0 26px;">Comuniones</span><span style="color:#FBE3CF; font-size:18px;">✦</span>
+      <span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:30px; color:#FCF6EC; padding:0 26px;">Bodas</span><span style="color:#FBE3CF; font-size:18px;">✦</span>
+    </div>
+  </div>
+
+  <!-- ============ SERVICIOS ============ -->
+  <section id="servicios" style="padding:clamp(64px,9vw,120px) clamp(20px,5vw,64px); background:#F5EDE0;">
+    <div style="max-width:1180px; margin:0 auto;">
+      <div data-reveal style="text-align:center; margin-bottom:clamp(40px,5vw,68px);">
+        <span style="font-size:13px; letter-spacing:0.34em; text-transform:uppercase; color:#C49A45;">Servicios</span>
+        <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(34px,5vw,60px); color:#3F3328; margin-top:14px; line-height:1.05;">Todo lo que tu evento necesita</h2>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(20px,2.4vw,32px);">
+
+        <!-- Card 1 -->
+        <article data-reveal style="position:relative; overflow:hidden; background:#FFFDF8; border:1px solid rgba(196,154,69,0.2); border-radius:22px; padding:44px 34px 40px; transition:transform .35s, box-shadow .35s, border-color .35s;" style-hover="transform:translateY(-10px); box-shadow:0 30px 56px -24px rgba(193,107,79,0.45); border-color:rgba(193,107,79,0.45)">
+          <span style="position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,#C16B4F,#DAAE4E);"></span>
+          <div style="width:60px; height:60px; border-radius:18px; background:linear-gradient(135deg,rgba(196,154,69,0.18),rgba(193,107,79,0.14)); display:flex; align-items:center; justify-content:center; margin-bottom:26px;">
+            <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#C16B4F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+          </div>
+          <h3 style="font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:600; color:#3F3328; margin-bottom:14px;">Organización de eventos</h3>
+          <p style="font-size:15.5px; font-weight:300; line-height:1.7; color:#6E6051;">Te acompañamos en la planificación y preparación de cada evento social, encargándonos de coordinar los detalles para que disfrutes del momento.</p>
+        </article>
+
+        <!-- Card 2 -->
+        <article data-reveal style="position:relative; overflow:hidden; background:#FFFDF8; border:1px solid rgba(196,154,69,0.2); border-radius:22px; padding:44px 34px 40px; transition:transform .35s, box-shadow .35s, border-color .35s;" style-hover="transform:translateY(-10px); box-shadow:0 30px 56px -24px rgba(193,107,79,0.45); border-color:rgba(193,107,79,0.45)">
+          <span style="position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,#D9683F,#E0997E);"></span>
+          <div style="width:60px; height:60px; border-radius:18px; background:linear-gradient(135deg,rgba(193,107,79,0.18),rgba(224,153,126,0.16)); display:flex; align-items:center; justify-content:center; margin-bottom:26px;">
+            <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#C16B4F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2M12 19v2M5 12H3M21 12h-2M6 6 4.5 4.5M18 6l1.5-1.5M6 18l-1.5 1.5M18 18l1.5 1.5"/><circle cx="12" cy="12" r="4"/></svg>
+          </div>
+          <h3 style="font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:600; color:#3F3328; margin-bottom:14px;">Decoración de eventos</h3>
+          <p style="font-size:15.5px; font-weight:300; line-height:1.7; color:#6E6051;">Creamos ambientaciones especiales para cumpleaños, eventos infantiles, bautizos, comuniones y bodas, cuidando cada detalle para una presentación única.</p>
+        </article>
+
+        <!-- Card 3 -->
+        <article data-reveal style="position:relative; overflow:hidden; background:#FFFDF8; border:1px solid rgba(196,154,69,0.2); border-radius:22px; padding:44px 34px 40px; transition:transform .35s, box-shadow .35s, border-color .35s;" style-hover="transform:translateY(-10px); box-shadow:0 30px 56px -24px rgba(193,107,79,0.45); border-color:rgba(193,107,79,0.45)">
+          <span style="position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,#DAAE4E,#C16B4F);"></span>
+          <div style="width:60px; height:60px; border-radius:18px; background:linear-gradient(135deg,rgba(218,174,78,0.2),rgba(196,154,69,0.16)); display:flex; align-items:center; justify-content:center; margin-bottom:26px;">
+            <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#C49A45" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9ZM4 11V8a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v3M9 7V4M15 7V4"/></svg>
+          </div>
+          <h3 style="font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:600; color:#3F3328; margin-bottom:14px;">Alquiler de elementos</h3>
+          <p style="font-size:15.5px; font-weight:300; line-height:1.7; color:#6E6051;">Ofrecemos alquiler de mesas, sillas, vajillas, cubiertos y cristalería en general para completar la organización y el montaje de tu evento.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ALQUILERES ============ -->
+  <section id="alquileres" style="padding:clamp(64px,9vw,120px) clamp(20px,5vw,64px); background:#EFE4D3;">
+    <div style="max-width:1180px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:clamp(36px,5vw,72px); align-items:center;">
+      <div data-reveal>
+        <span style="font-size:13px; letter-spacing:0.34em; text-transform:uppercase; color:#C49A45;">Alquileres</span>
+        <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(32px,4.6vw,54px); color:#3F3328; margin-top:14px; line-height:1.08;">Mobiliario y elementos para tu mesa</h2>
+        <p style="font-size:16px; font-weight:300; line-height:1.75; color:#6E6051; margin-top:22px; max-width:480px;">
+          Completá la organización de tu evento con nuestro alquiler de elementos. Contamos con todo lo necesario para armar mesas prolijas y elegantes.
+        </p>
+        <a href="{{ waHref }}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:10px; margin-top:30px; color:#C16B4F; font-size:15.5px; letter-spacing:0.03em; text-decoration:none; border-bottom:1px solid rgba(193,107,79,0.4); padding-bottom:4px; transition:gap .25s;" style-hover="gap:16px">Consultar disponibilidad →</a>
+      </div>
+      <div data-reveal style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div style="background:#FFFDF8; border-radius:16px; padding:26px 22px; border:1px solid rgba(196,154,69,0.2); transition:transform .3s, box-shadow .3s;" style-hover="transform:translateY(-5px); box-shadow:0 18px 34px -18px rgba(193,107,79,0.5)"><span style="font-family:'Cormorant Garamond',serif; font-size:24px; color:#4A3D30;">Mesas</span></div>
+        <div style="background:#FFFDF8; border-radius:16px; padding:26px 22px; border:1px solid rgba(196,154,69,0.2); transition:transform .3s, box-shadow .3s;" style-hover="transform:translateY(-5px); box-shadow:0 18px 34px -18px rgba(193,107,79,0.5)"><span style="font-family:'Cormorant Garamond',serif; font-size:24px; color:#4A3D30;">Sillas</span></div>
+        <div style="background:#FFFDF8; border-radius:16px; padding:26px 22px; border:1px solid rgba(196,154,69,0.2); transition:transform .3s, box-shadow .3s;" style-hover="transform:translateY(-5px); box-shadow:0 18px 34px -18px rgba(193,107,79,0.5)"><span style="font-family:'Cormorant Garamond',serif; font-size:24px; color:#4A3D30;">Vajillas</span></div>
+        <div style="background:#FFFDF8; border-radius:16px; padding:26px 22px; border:1px solid rgba(196,154,69,0.2); transition:transform .3s, box-shadow .3s;" style-hover="transform:translateY(-5px); box-shadow:0 18px 34px -18px rgba(193,107,79,0.5)"><span style="font-family:'Cormorant Garamond',serif; font-size:24px; color:#4A3D30;">Cubiertos</span></div>
+        <div style="background:linear-gradient(120deg,#C16B4F,#D9683F); border-radius:16px; padding:26px 22px; grid-column:1 / -1; transition:transform .3s, box-shadow .3s;" style-hover="transform:translateY(-5px); box-shadow:0 18px 34px -18px rgba(193,107,79,0.6)"><span style="font-family:'Cormorant Garamond',serif; font-size:24px; color:#FCF6EC;">Cristalería en general</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GALERIA ============ -->
+  <section id="galeria" style="padding:clamp(64px,9vw,120px) clamp(20px,5vw,64px); background:#F5EDE0;">
+    <div style="max-width:1180px; margin:0 auto;">
+      <div data-reveal style="text-align:center; margin-bottom:clamp(28px,3.4vw,44px);">
+        <span style="font-size:13px; letter-spacing:0.34em; text-transform:uppercase; color:#C49A45;">Galería</span>
+        <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(34px,5vw,60px); color:#3F3328; margin-top:14px; line-height:1.05;">Algunos de nuestros trabajos</h2>
+        <p style="font-size:15px; font-weight:300; color:#6E6051; margin-top:14px;">Filtrá por tipo de evento — espacios reservados para tus fotos reales.</p>
+      </div>
+      {{ gallery }}
+    </div>
+  </section>
+
+  <!-- ============ CONTACTO ============ -->
+  <section id="contacto" style="position:relative; padding:clamp(72px,10vw,130px) clamp(20px,5vw,64px); background:radial-gradient(130% 130% at 50% 0%, #D9683F 0%, #C16B4F 45%, #A8573D 100%); overflow:hidden; text-align:center;">
+    <div style="position:absolute; top:-70px; left:-50px; width:260px; height:260px; border:1px solid rgba(252,246,236,0.25); border-radius:50%; animation:ncgDrift 12s ease-in-out infinite;"></div>
+    <div style="position:absolute; bottom:-90px; right:-40px; width:320px; height:320px; border:1px dashed rgba(252,246,236,0.22); border-radius:50%; animation:ncgDrift 15s ease-in-out infinite .4s;"></div>
+    <div style="position:absolute; top:20%; right:12%; width:160px; height:160px; border-radius:50%; filter:blur(50px); background:rgba(218,174,78,0.35); animation:ncgBlob 14s ease-in-out infinite;"></div>
+    <div data-reveal style="position:relative; z-index:2; max-width:720px; margin:0 auto;">
+      <span style="font-size:13px; letter-spacing:0.34em; text-transform:uppercase; color:rgba(252,246,236,0.88);">Contacto</span>
+      <h2 style="font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(36px,5.4vw,66px); color:#FCF6EC; margin-top:16px; line-height:1.05;">Hablemos de tu próximo evento</h2>
+      <p style="font-size:clamp(16px,1.6vw,19px); font-weight:300; line-height:1.7; color:rgba(252,246,236,0.94); margin-top:22px;">
+        Consultanos por disponibilidad y armamos una propuesta según el tipo de evento que necesitás.
+      </p>
+      <a href="{{ waHref }}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:11px; margin-top:38px; background:#FCF6EC; color:#A8573D; font-size:17px; letter-spacing:0.03em; padding:17px 36px; border-radius:999px; text-decoration:none; box-shadow:0 18px 40px -14px rgba(0,0,0,0.4); transition:transform .25s, box-shadow .25s;" style-hover="transform:translateY(-3px) scale(1.03); box-shadow:0 28px 54px -14px rgba(0,0,0,0.5)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#A8573D"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20Zm4.4-5.6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.8 1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5s-.5-1.3-.7-1.7-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2c0 1.3 1 2.6 1.1 2.7s1.9 2.9 4.6 4c1.7.7 2.3.8 3.1.6.5-.1 1.4-.6 1.6-1.1s.2-1 .1-1.1-.2-.2-.4-.3Z"/></svg>
+        {{ waLabel }}
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer style="padding:clamp(40px,5vw,64px) clamp(20px,5vw,64px); background:#3F3328; color:#E6D9C6;">
+    <div style="max-width:1180px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:24px;">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <span style="font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:600; letter-spacing:0.14em; color:#DAAE4E;">NCG</span>
+        <span style="width:1px; height:24px; background:rgba(230,217,198,0.3);"></span>
+        <span style="font-size:12px; letter-spacing:0.3em; text-transform:uppercase; color:rgba(230,217,198,0.75);">Eventos · by kokoa_te</span>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:26px; font-size:13.5px; color:rgba(230,217,198,0.8);">
+        <a href="#servicios" style="color:inherit; text-decoration:none;" style-hover="color:#FCF6EC">Servicios</a>
+        <a href="#alquileres" style="color:inherit; text-decoration:none;" style-hover="color:#FCF6EC">Alquileres</a>
+        <a href="#galeria" style="color:inherit; text-decoration:none;" style-hover="color:#FCF6EC">Galería</a>
+        <a href="{{ waHref }}" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;" style-hover="color:#FCF6EC">WhatsApp</a>
+      </div>
+    </div>
+    <p style="max-width:1180px; margin:28px auto 0; font-size:12px; color:rgba(230,217,198,0.45); border-top:1px solid rgba(230,217,198,0.12); padding-top:22px;">© {{ year }} NCG Eventos. Organización, decoración y alquiler para eventos especiales.</p>
+  </footer>
+
+  <!-- floating whatsapp button -->
+  <a href="{{ waHref }}" target="_blank" rel="noopener" style="position:fixed; bottom:26px; right:26px; z-index:60; width:60px; height:60px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; box-shadow:0 12px 30px -8px rgba(37,211,102,0.6); animation:ncgPulse 2.4s ease-out infinite; transition:transform .25s;" style-hover="transform:scale(1.1)">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20Zm4.4-5.6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.8 1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.6-1.2.1-.2 0-.3 0-.5s-.5-1.3-.7-1.7-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2c0 1.3 1 2.6 1.1 2.7s1.9 2.9 4.6 4c1.7.7 2.3.8 3.1.6.5-.1 1.4-.6 1.6-1.1s.2-1 .1-1.1-.2-.2-.4-.3Z"/></svg>
+  </a>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900},&quot;whatsappNumber&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;595981123456&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;whatsappMessage&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Hola NCG Eventos, me gustaría consultar disponibilidad y un presupuesto para mi evento.&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { filter: 'Todos' };
+
+  balloon(fill, w) {
+    const h = Math.round(w * 1.22);
+    return React.createElement('svg', { width: w, height: h + 60, viewBox: `0 0 ${w} ${h + 60}`, fill: 'none' },
+      React.createElement('ellipse', { cx: w / 2, cy: h / 2, rx: w / 2 - 2, ry: h / 2 - 2, fill: fill }),
+      React.createElement('path', { d: `M${w/2 - 6} ${h-2} L${w/2} ${h+8} L${w/2 + 6} ${h-2} Z`, fill: fill }),
+      React.createElement('path', { d: `M${w/2} ${h+8} q 14 22 -2 40 q -14 16 4 30`, stroke: '#C49A45', strokeWidth: 1, fill: 'none', opacity: 0.6 }),
+      React.createElement('path', { d: `M${w*0.32} ${h*0.3} q ${w*0.1} ${h*0.12} ${w*0.04} ${h*0.34}`, stroke: 'rgba(255,255,255,0.45)', strokeWidth: 2, fill: 'none', strokeLinecap: 'round' })
+    );
+  }
+
+  tile(label, mono, accent) {
+    return React.createElement('figure', {
+      style: {
+        position: 'relative', borderRadius: '18px', overflow: 'hidden', minHeight: '230px',
+        border: '1px solid rgba(196,154,69,0.22)',
+        background: `repeating-linear-gradient(135deg, ${accent ? 'rgba(193,107,79,0.12)' : 'rgba(196,154,69,0.12)'} 0 14px, rgba(255,253,248,0.7) 14px 28px)`,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px',
+        transition: 'transform .35s, box-shadow .35s', cursor: 'default'
+      },
+      onMouseEnter: (e) => { e.currentTarget.style.transform = 'scale(1.03)'; e.currentTarget.style.boxShadow = '0 26px 46px -22px rgba(193,107,79,0.45)'; },
+      onMouseLeave: (e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = 'none'; }
+    },
+      React.createElement('span', { style: { fontFamily: "'Cormorant Garamond',serif", fontSize: '25px', color: '#3F3328' } }, label),
+      React.createElement('span', { style: { fontFamily: 'ui-monospace, monospace', fontSize: '11px', letterSpacing: '0.08em', color: '#9A8C76', textTransform: 'uppercase' } }, mono)
+    );
+  }
+
+  renderVals() {
+    const number = (this.props.whatsappNumber ?? '595981123456').replace(/[^0-9]/g, '');
+    const msg = this.props.whatsappMessage ?? 'Hola NCG Eventos, me gustaría consultar disponibilidad y un presupuesto para mi evento.';
+    const waHref = `https://wa.me/${number}?text=${encodeURIComponent(msg)}`;
+
+    const tiles = [
+      { label: 'Cumpleaños', mono: 'foto · cumpleaños', cat: 'Cumpleaños', accent: true },
+      { label: 'Eventos infantiles', mono: 'foto · infantil', cat: 'Infantiles', accent: false },
+      { label: 'Bautizos', mono: 'foto · bautizo', cat: 'Bautizos', accent: false },
+      { label: 'Comuniones', mono: 'foto · comunión', cat: 'Comuniones', accent: true },
+      { label: 'Bodas', mono: 'foto · boda', cat: 'Bodas', accent: false },
+      { label: 'Decoración', mono: 'foto · decoración', cat: 'Decoración', accent: true }
+    ];
+    const cats = ['Todos', 'Cumpleaños', 'Infantiles', 'Bautizos', 'Comuniones', 'Bodas', 'Decoración'];
+    const active = this.state.filter;
+
+    const tabs = React.createElement('div', {
+      style: { display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px', marginBottom: '36px' }
+    }, cats.map((c) => {
+      const on = c === active;
+      return React.createElement('button', {
+        key: c,
+        onClick: () => this.setState({ filter: c }),
+        style: {
+          fontFamily: "'Jost',sans-serif", fontSize: '14px', letterSpacing: '0.03em',
+          padding: '9px 20px', borderRadius: '999px', cursor: 'pointer',
+          border: on ? '1px solid transparent' : '1px solid rgba(193,107,79,0.35)',
+          background: on ? 'linear-gradient(120deg,#C16B4F,#D9683F)' : 'transparent',
+          color: on ? '#FCF6EC' : '#9A6B52',
+          boxShadow: on ? '0 10px 22px -10px rgba(193,107,79,0.6)' : 'none',
+          transition: 'all .25s'
+        }
+      }, c);
+    }));
+
+    const shown = tiles.filter((t) => active === 'Todos' || t.cat === active);
+    const grid = React.createElement('div', {
+      style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: '16px' }
+    }, shown.map((t) => React.cloneElement(this.tile(t.label, t.mono, t.accent), { key: t.label })));
+
+    return {
+      waHref,
+      waLabel: 'Escribinos por WhatsApp',
+      year: new Date().getFullYear(),
+      balloonA: this.balloon('#C16B4F', 84),
+      balloonB: this.balloon('#CB7E63', 58),
+      balloonC: this.balloon('#BD6A50', 76),
+      balloonD: this.balloon('#C97A5E', 52),
+      flyA: this.balloon('#C16B4F', 64),
+      flyB: this.balloon('#CB7E63', 48),
+      flyC: this.balloon('#BD6A50', 56),
+      flyD: this.balloon('#C97A5E', 42),
+      gallery: React.createElement('div', null, tabs, grid)
+    };
+  }
+
+  armReveal() {
+    // Entrance handled purely via inline CSS animation on each element (see template).
+    // No JS opacity toggling — avoids getting stuck invisible under runtime re-renders.
+  }
+
+  componentDidMount() {
+    const root = this.el || document;
+    this.armReveal();
+    const reveal = () => {};
+
+    // scroll progress bar (appended to body so React re-renders don't reset it)
+    const bar = document.createElement('div');
+    bar.style.cssText = 'position:fixed;top:0;left:0;height:4px;width:0%;z-index:70;background:linear-gradient(90deg,#C16B4F,#DAAE4E);box-shadow:0 0 12px rgba(193,107,79,0.5);transition:width .1s linear;pointer-events:none;';
+    document.body.appendChild(bar);
+    this._bar = bar;
+
+    this._onScroll = (e) => {
+      let sc = document.scrollingElement || document.documentElement;
+      if (e && e.target && e.target.nodeType === 1 && e.target !== document) sc = e.target;
+      else if (e && e.target && e.target.scrollingElement) sc = e.target.scrollingElement;
+      const max = sc.scrollHeight - sc.clientHeight;
+      bar.style.width = (max > 0 ? Math.min(100, (sc.scrollTop / max) * 100) : 0) + '%';
+      reveal();
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    window.addEventListener('resize', this._onScroll, { passive: true });
+    document.addEventListener('scroll', this._onScroll, { passive: true, capture: true });
+
+    // mouse parallax for hero balloons
+    this._onMove = (e) => {
+      const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+      const dx = (e.clientX - cx) / cx, dy = (e.clientY - cy) / cy;
+      root.querySelectorAll('[data-parallax]').forEach((el) => {
+        const d = parseFloat(el.dataset.parallax) || 0.05;
+        el.style.transform = `translate(${-dx * d * 80}px, ${-dy * d * 80}px)`;
+        el.style.transition = 'transform .25s ease-out';
+      });
+    };
+    window.addEventListener('mousemove', this._onMove, { passive: true });
+
+    this._onScroll();
+  }
+
+  componentDidUpdate() {
+    this.armReveal();
+  }
+
+  componentWillUnmount() {
+    if (this._onScroll) {
+      window.removeEventListener('scroll', this._onScroll);
+      window.removeEventListener('resize', this._onScroll);
+      document.removeEventListener('scroll', this._onScroll, true);
+    }
+    if (this._onMove) window.removeEventListener('mousemove', this._onMove);
+    if (this._bar && this._bar.parentNode) this._bar.parentNode.removeChild(this._bar);
+  }
+}
+</script>
+</body>
+</html>

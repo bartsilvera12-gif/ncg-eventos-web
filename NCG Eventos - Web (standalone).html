@@ -48,7 +48,7 @@
   <script>
     (function () {
       function attach() {
-        var nav = document.querySelector('nav[style*="position:fixed"]');
+        var nav = document.querySelector('nav');
         var logo = document.getElementById('ncg-brand-logo');
         if (!nav || !logo) return setTimeout(attach, 200);
 
@@ -94,7 +94,167 @@
     #__bundler_thumbnail { position: fixed; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #faf9f5; z-index: 9999; }
     #__bundler_thumbnail svg { width: 100%; height: 100%; object-fit: contain; }
     #__bundler_placeholder { color: #999; font-size: 14px; }
+
+    /* ============ MOBILE — patches over the rendered nav/sections ============ */
+    #ncg-mnav-ham { display: none; }
+    @media (max-width: 760px) {
+      nav { padding: 12px 16px !important; }
+      /* Convert nav links into a slide-down panel */
+      nav > div.ncg-mnav-target {
+        position: fixed !important; top: 70px !important; left: 12px !important; right: 12px !important;
+        flex-direction: column !important; align-items: stretch !important;
+        gap: 4px !important; padding: 14px !important;
+        background: #FCF6EC !important;
+        border: 1px solid rgba(196,154,69,0.28) !important;
+        border-radius: 14px !important;
+        box-shadow: 0 18px 40px -14px rgba(63,51,40,0.35) !important;
+        opacity: 0; transform: translateY(-8px); pointer-events: none;
+        transition: opacity .25s, transform .25s;
+      }
+      nav > div.ncg-mnav-target.ncg-mnav-open {
+        opacity: 1; transform: translateY(0); pointer-events: auto;
+      }
+      nav a[style*="rgb(74, 61, 48)"] {
+        padding: 12px 14px !important; border-radius: 10px;
+        font-size: 15px !important; letter-spacing: 0.04em !important;
+      }
+      nav a[style*="rgb(74, 61, 48)"]::before,
+      nav a[style*="rgb(74, 61, 48)"]::after { display: none !important; }
+      nav a[style*="rgb(74, 61, 48)"]:hover { background: rgba(218,174,78,0.12); transform: none !important; }
+      nav a.ncg-nav-active { background: linear-gradient(120deg, rgba(218,174,78,0.18), rgba(193,107,79,0.16)) !important; }
+      /* WhatsApp button centered */
+      nav a[style*="linear-gradient(120deg,#C16B4F,#D9683F)"] { justify-content: center !important; margin-top: 4px !important; }
+
+      #ncg-mnav-ham {
+        display: inline-flex !important; align-items: center; justify-content: center;
+        width: 40px; height: 40px; border-radius: 10px;
+        background: rgba(252,246,236,0.92); border: 1px solid rgba(196,154,69,0.28);
+        color: #4A3D30; cursor: pointer; flex-shrink: 0;
+      }
+
+      /* Carousel paddings smaller on mobile */
+      .ncg-car-wrap { padding-left: 50px !important; padding-right: 50px !important; }
+      .ncg-car-btn { width: 40px !important; height: 40px !important; }
+
+      /* Hide hero polaroids on mobile */
+      #hero-photos { display: none !important; }
+
+      /* Footer: stack and center */
+      footer > div { flex-direction: column !important; align-items: stretch !important; text-align: center; }
+    }
+    @media (max-width: 460px) {
+      nav { padding: 10px 14px !important; }
+    }
   </style>
+  <script>
+    // Mobile nav: inject a hamburger button and toggle the right-side links panel.
+    (function () {
+      // Inject mobile CSS at runtime (the bundler strips file <head> styles)
+      if (!document.getElementById('ncg-mnav-css')) {
+        var st = document.createElement('style');
+        st.id = 'ncg-mnav-css';
+        st.textContent = [
+          '#ncg-mnav-ham { display: none; }',
+          '@media (max-width: 760px) {',
+          '  nav { padding: 12px 16px !important; flex-wrap: nowrap !important; }',
+          '  nav > div.ncg-mnav-target {',
+          '    position: fixed !important; top: 70px !important; left: 12px !important; right: 12px !important;',
+          '    flex-direction: column !important; align-items: stretch !important;',
+          '    gap: 4px !important; padding: 14px !important;',
+          '    background: #FCF6EC !important;',
+          '    border: 1px solid rgba(196,154,69,0.28) !important;',
+          '    border-radius: 14px !important;',
+          '    box-shadow: 0 18px 40px -14px rgba(63,51,40,0.35) !important;',
+          '    opacity: 0; transform: translateY(-8px); pointer-events: none;',
+          '    transition: opacity .25s, transform .25s;',
+          '  }',
+          '  nav > div.ncg-mnav-target.ncg-mnav-open {',
+          '    opacity: 1; transform: translateY(0); pointer-events: auto;',
+          '  }',
+          '  nav a[style*="rgb(74, 61, 48)"] {',
+          '    padding: 12px 14px !important; border-radius: 10px;',
+          '    font-size: 15px !important; letter-spacing: 0.04em !important;',
+          '  }',
+          '  nav a[style*="rgb(74, 61, 48)"]::before,',
+          '  nav a[style*="rgb(74, 61, 48)"]::after { display: none !important; }',
+          '  nav a[style*="rgb(74, 61, 48)"]:hover { background: rgba(218,174,78,0.12); transform: none !important; }',
+          '  nav a.ncg-nav-active { background: linear-gradient(120deg, rgba(218,174,78,0.18), rgba(193,107,79,0.16)) !important; }',
+          '  nav a[style*="linear-gradient(120deg"] { justify-content: center !important; margin-top: 4px !important; }',
+          '  #ncg-mnav-ham {',
+          '    display: inline-flex !important; align-items: center; justify-content: center;',
+          '    width: 40px; height: 40px; border-radius: 10px;',
+          '    background: rgba(252,246,236,0.92); border: 1px solid rgba(196,154,69,0.28);',
+          '    color: #4A3D30; cursor: pointer; flex-shrink: 0;',
+          '  }',
+          '  .ncg-car-wrap { padding-left: 50px !important; padding-right: 50px !important; }',
+          '  .ncg-car-btn { width: 40px !important; height: 40px !important; }',
+          '  #hero-photos { display: none !important; }',
+          '  footer > div { flex-direction: column !important; align-items: stretch !important; text-align: center; }',
+          '}',
+          '@media (max-width: 460px) { nav { padding: 10px 14px !important; } }',
+        ].join('\n');
+        document.head.appendChild(st);
+      }
+
+      function init() {
+        var nav = document.querySelector('nav');
+        if (!nav) return setTimeout(init, 250);
+        var links = nav.querySelector(':scope > div') || nav.children[nav.children.length - 1];
+        if (!links || !links.tagName || links.tagName.toLowerCase() !== 'div') return setTimeout(init, 250);
+        if (nav.querySelector('#ncg-mnav-ham')) return;
+
+        // Re-inject mobile CSS here too — the bundler may have reset the head
+        if (!document.getElementById('ncg-mnav-css')) {
+          var st2 = document.createElement('style');
+          st2.id = 'ncg-mnav-css';
+          st2.textContent = [
+            '#ncg-mnav-ham { display: none; }',
+            '@media (max-width: 760px) {',
+            '  nav { padding: 12px 16px !important; flex-wrap: nowrap !important; }',
+            '  nav > div.ncg-mnav-target {',
+            '    position: fixed !important; top: 70px !important; left: 12px !important; right: 12px !important;',
+            '    flex-direction: column !important; align-items: stretch !important;',
+            '    gap: 4px !important; padding: 14px !important;',
+            '    background: #FCF6EC !important; border: 1px solid rgba(196,154,69,0.28) !important;',
+            '    border-radius: 14px !important; box-shadow: 0 18px 40px -14px rgba(63,51,40,0.35) !important;',
+            '    opacity: 0; transform: translateY(-8px); pointer-events: none;',
+            '    transition: opacity .25s, transform .25s;',
+            '  }',
+            '  nav > div.ncg-mnav-target.ncg-mnav-open { opacity: 1; transform: translateY(0); pointer-events: auto; }',
+            '  nav a[style*="rgb(74, 61, 48)"] { padding: 12px 14px !important; border-radius: 10px; font-size: 15px !important; letter-spacing: 0.04em !important; }',
+            '  nav a[style*="rgb(74, 61, 48)"]::before, nav a[style*="rgb(74, 61, 48)"]::after { display: none !important; }',
+            '  nav a[style*="rgb(74, 61, 48)"]:hover { background: rgba(218,174,78,0.12); transform: none !important; }',
+            '  nav a.ncg-nav-active { background: linear-gradient(120deg, rgba(218,174,78,0.18), rgba(193,107,79,0.16)) !important; }',
+            '  nav a[style*="linear-gradient(120deg"] { justify-content: center !important; margin-top: 4px !important; }',
+            '  #ncg-mnav-ham { display: inline-flex !important; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 10px; background: rgba(252,246,236,0.92); border: 1px solid rgba(196,154,69,0.28); color: #4A3D30; cursor: pointer; flex-shrink: 0; }',
+            '  .ncg-car-wrap { padding-left: 50px !important; padding-right: 50px !important; }',
+            '  .ncg-car-btn { width: 40px !important; height: 40px !important; }',
+            '  #hero-photos { display: none !important; }',
+            '  footer > div { flex-direction: column !important; align-items: stretch !important; text-align: center; }',
+            '}',
+            '@media (max-width: 460px) { nav { padding: 10px 14px !important; } }',
+          ].join('\n');
+          document.head.appendChild(st2);
+        }
+
+        links.classList.add('ncg-mnav-target');
+        var ham = document.createElement('button');
+        ham.id = 'ncg-mnav-ham';
+        ham.setAttribute('aria-label', 'Menú');
+        ham.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
+        nav.appendChild(ham);
+        ham.addEventListener('click', function (e) { e.stopPropagation(); links.classList.toggle('ncg-mnav-open'); });
+        document.addEventListener('click', function (e) {
+          if (!e.target.closest('#ncg-mnav-ham') && !e.target.closest('nav')) links.classList.remove('ncg-mnav-open');
+        });
+        links.querySelectorAll('a').forEach(function (a) {
+          a.addEventListener('click', function () { links.classList.remove('ncg-mnav-open'); });
+        });
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+      else setTimeout(init, 250);
+    })();
+  </script>
   <noscript>
     <style>#__bundler_loading { display: none; }</style>
     <div style="position:fixed;bottom:12px;left:12px;font:13px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;color:#999;background:rgba(255,255,255,0.9);padding:6px 12px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,0.08);z-index:10000;">

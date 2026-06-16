@@ -534,17 +534,79 @@
     .toast.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
     .toast .ic { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--coral)); display: flex; align-items: center; justify-content: center; color: var(--text); }
 
-    /* responsive sidebar (basic) */
+    /* ============ RESPONSIVE ============ */
+    .hamburger { display: none; }
     @media (max-width: 900px) {
-      body { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
+      body {
+        grid-template-columns: 1fr;
+        background: var(--bg);
+      }
+      .sidebar {
+        position: fixed; top: 0; left: 0; height: 100vh;
+        width: 280px; max-width: 86vw;
+        transform: translateX(-100%);
+        transition: transform .35s cubic-bezier(.22,.61,.36,1);
+        z-index: 110;
+        box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5);
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-backdrop {
+        position: fixed; inset: 0; z-index: 105;
+        background: rgba(20,14,8,0.55);
+        opacity: 0; pointer-events: none;
+        transition: opacity .25s ease;
+      }
+      .sidebar-backdrop.open { opacity: 1; pointer-events: auto; }
+      .hamburger {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 40px; height: 40px; border-radius: 10px;
+        background: var(--bg-card); border: 1px solid var(--border);
+        color: var(--text); cursor: pointer; flex-shrink: 0;
+        transition: color .2s, background .2s;
+      }
+      .hamburger:hover { color: var(--coral); }
+      .topbar { padding: 12px 16px; gap: 10px; }
+      .topbar .crumb h1 { font-size: 20px; }
+      .topbar .crumb .small { font-size: 10px; }
+      .topbar .iconbtn { width: 36px; height: 36px; }
+      .topbar .cta { padding: 9px 14px; font-size: 12px; }
+      .topbar .cta span { display: none; }
+      .content { padding: 18px 16px 50px; }
+      .kpi { padding: 16px; }
+      .kpi .value { font-size: 28px; }
+      .card .hd { padding: 14px 16px; }
+      .card .hd h3 { font-size: 17px; }
+      .card .hd .sub { display: none; }
+      .card .bd { padding: 12px 16px 16px; }
+      /* tables get horizontal scroll on mobile */
+      .card > table, .card > .bd > table {
+        display: block; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      }
+      table th, table td { padding: 10px 10px; font-size: 12.5px; }
+      .filters { gap: 8px; }
+      .filters .field input { min-width: 0; width: 100%; }
+      .filters .chip { padding: 7px 12px; font-size: 12px; }
+      .modal { max-width: calc(100vw - 24px); }
+      .modal .grid2 { grid-template-columns: 1fr; }
+      .pop { width: min(360px, calc(100vw - 24px)); right: -8px; }
+      .cal { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; gap: 8px; padding: 10px 0; }
+      .form-row .lb { margin-bottom: 2px; }
+    }
+    @media (max-width: 520px) {
+      .topbar .iconbtn:nth-of-type(2) { display: none; } /* hide filter icon */
+      .topbar .cta { padding: 9px 12px; }
+      .topbar .cta svg { width: 12px; height: 12px; }
+      .kpis { gap: 12px; }
+      .row, .row.two, .row.three { gap: 14px; }
     }
   </style>
 </head>
 <body>
 
   <!-- ============ SIDEBAR ============ -->
-  <aside class="sidebar">
+  <div class="sidebar-backdrop" id="side-bd"></div>
+  <aside class="sidebar" id="sidebar">
     <div class="brand">
       <div class="logo-box"><img src="assets/logo-ncg.jpeg" alt="NCG Eventos"></div>
       <div class="name">
@@ -650,6 +712,9 @@
 
     <!-- TOPBAR -->
     <header class="topbar">
+      <button class="hamburger" id="ham-btn" aria-label="Menú">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
       <div class="crumb">
         <span class="small">NCG Eventos</span>
         <h1 id="page-title">Dashboard</h1>
@@ -1244,8 +1309,17 @@
     }
 
     document.querySelectorAll('.sidebar nav a[data-view]').forEach(a => {
-      a.addEventListener('click', (e) => { e.preventDefault(); setView(a.dataset.view); });
+      a.addEventListener('click', (e) => { e.preventDefault(); setView(a.dataset.view); closeSidebar(); });
     });
+
+    // Mobile sidebar drawer
+    const sideEl = document.getElementById('sidebar');
+    const sideBd = document.getElementById('side-bd');
+    function openSidebar() { sideEl.classList.add('open'); sideBd.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeSidebar() { sideEl.classList.remove('open'); sideBd.classList.remove('open'); document.body.style.overflow = ''; }
+    document.getElementById('ham-btn').addEventListener('click', () => sideEl.classList.contains('open') ? closeSidebar() : openSidebar());
+    sideBd.addEventListener('click', closeSidebar);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && sideEl.classList.contains('open')) closeSidebar(); });
 
     // initial view from hash
     const initial = (location.hash || '#dashboard').slice(1);

@@ -71,6 +71,34 @@
       transition: transform .25s, box-shadow .25s;
     }
     nav .wa:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -8px rgba(193,107,79,0.75); }
+    /* ============ MOBILE NAV ============ */
+    nav .ham { display: none; }
+    @media (max-width: 760px) {
+      nav { padding: 14px 18px; }
+      nav .brand .sub { display: none; }
+      nav .links { position: fixed; top: 70px; left: 12px; right: 12px;
+        flex-direction: column; align-items: stretch; gap: 4px;
+        padding: 14px; background: #FCF6EC; border: 1px solid rgba(196,154,69,0.25);
+        border-radius: 14px; box-shadow: 0 18px 40px -14px rgba(63,51,40,0.35);
+        opacity: 0; transform: translateY(-8px); pointer-events: none;
+        transition: opacity .25s, transform .25s; }
+      nav .links.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+      nav .links a:not(.wa) { padding: 12px 14px; border-radius: 10px;
+        font-size: 15px; letter-spacing: 0.05em; }
+      nav .links a:not(.wa)::before, nav .links a:not(.wa)::after { display: none; }
+      nav .links a:not(.wa):hover { background: rgba(218,174,78,0.12); }
+      nav .links a.active { background: linear-gradient(120deg, rgba(218,174,78,0.18), rgba(193,107,79,0.16)); }
+      nav .links .wa { justify-content: center; margin-top: 6px; }
+      nav .ham { display: inline-flex; align-items: center; justify-content: center;
+        width: 40px; height: 40px; border-radius: 10px;
+        background: rgba(252,246,236,0.92); border: 1px solid rgba(196,154,69,0.28);
+        color: #4A3D30; cursor: pointer; transition: background .2s, color .2s; }
+      nav .ham:hover { color: #C16B4F; }
+    }
+    @media (max-width: 460px) {
+      nav { padding: 12px 14px; }
+      nav .brand .logo { font-size: 26px; }
+    }
 
     header.hero {
       position: relative; overflow: hidden;
@@ -313,7 +341,10 @@
       <span class="sep"></span>
       <span class="sub">Eventos</span>
     </a>
-    <div class="links">
+    <button class="ham" id="nav-ham" aria-label="Menú">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="links" id="nav-links">
       <a href="NCG Eventos - Web (standalone).html#inicio">Inicio</a>
       <a href="servicios.html">Servicios</a>
       <a href="alquileres.html">Alquileres</a>
@@ -460,6 +491,16 @@
         if (item?.src) openLightbox(idx);
       }, { once: false });
     }
+
+    // ============ MOBILE NAV ============
+    (function(){
+      const ham=document.getElementById('nav-ham');
+      const links=document.getElementById('nav-links');
+      if(!ham||!links)return;
+      ham.addEventListener('click',e=>{e.stopPropagation();links.classList.toggle('open');});
+      document.addEventListener('click',e=>{if(!e.target.closest('.links')&&!e.target.closest('.ham'))links.classList.remove('open');});
+      links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
+    })();
 
     // ============ LIGHTBOX ============
     const lb = document.getElementById('lightbox');

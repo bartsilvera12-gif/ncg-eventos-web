@@ -315,7 +315,98 @@
       else setTimeout(cleanup, 200);
     })();
 
-    // === Disabled slideshow (kept as no-op wrapper) ===
+    // === HERO PHOTOS — 2 polaroids on bottom corners (don't crowd the balloons) ===
+    (function () {
+      function place(photos) {
+        function apply() {
+          var hero = document.getElementById('inicio');
+          if (!hero) return setTimeout(apply, 250);
+
+          var oldStrip = hero.querySelector('#hero-photos');
+          if (oldStrip) oldStrip.remove();
+          if (!photos || !photos.length) return;
+
+          // Pick two photos — one early and one late in the collection for variety
+          var picks = [photos[0], photos[Math.max(0, photos.length - 1)]];
+          if (picks[0] === picks[1] && photos[Math.floor(photos.length / 2)]) {
+            picks[1] = photos[Math.floor(photos.length / 2)];
+          }
+
+          var wrap = document.createElement('div');
+          wrap.id = 'hero-photos';
+          wrap.style.cssText = 'position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden;';
+
+          // Positioned at the bottom corners so they sit BELOW the balloons that float in the middle.
+          // Sizes are responsive (clamp) and hide on small screens to stay readable.
+          var slots = [
+            { pos: 'bottom: 6%; left: 4%;',    rot: -6, w: 'clamp(160px, 17vw, 230px)', delay: '0s'   },
+            { pos: 'bottom: 6%; right: 4%;',   rot:  5, w: 'clamp(160px, 17vw, 230px)', delay: '1.2s' },
+          ];
+
+          picks.forEach(function (p, i) {
+            if (!p || !p.src) return;
+            var slot = slots[i];
+            var card = document.createElement('div');
+            card.style.cssText =
+              'position:absolute;' + slot.pos +
+              ' width:' + slot.w + ';' +
+              ' aspect-ratio: 4/5;' +
+              ' background:#FFFDF8;' +
+              ' padding:10px 10px 34px;' +
+              ' border-radius:6px;' +
+              ' box-shadow: 0 22px 44px -18px rgba(63,51,40,0.4), 0 4px 12px -4px rgba(63,51,40,0.22);' +
+              ' transform: rotate(' + slot.rot + 'deg);' +
+              ' animation: ncgHeroFloat 7s ease-in-out infinite ' + slot.delay + ';';
+            var img = document.createElement('div');
+            img.style.cssText =
+              'width:100%; height:100%;' +
+              ' background-image:url("' + p.src + '");' +
+              ' background-size:cover; background-position:center;' +
+              ' border-radius:3px;';
+            card.appendChild(img);
+            var label = document.createElement('div');
+            label.textContent = ({ boda:'Boda', quince:'Quince', corporativo:'Corporativo', cumple:'Cumpleaños', otro:'Eventos' }[p.cat] || 'Eventos');
+            label.style.cssText = 'position:absolute; bottom:8px; left:0; right:0; text-align:center;' +
+              ' font-family:\'Cormorant Garamond\',serif; font-size:13px; color:#6E6051; letter-spacing:0.1em;';
+            card.appendChild(label);
+            wrap.appendChild(card);
+          });
+
+          if (!document.getElementById('ncg-hero-float-kf')) {
+            var st = document.createElement('style');
+            st.id = 'ncg-hero-float-kf';
+            // Keep rotation while floating
+            st.textContent =
+              '@keyframes ncgHeroFloat { 0%,100% { transform: rotate(var(--r,0deg)) translateY(0); } 50% { transform: rotate(var(--r,0deg)) translateY(-8px); } }\n' +
+              '/* hide on small screens so they don\'t cover hero text */\n' +
+              '@media (max-width: 820px) { #hero-photos { display: none; } }';
+            document.head.appendChild(st);
+          }
+
+          hero.appendChild(wrap);
+        }
+        apply();
+      }
+      function init() {
+        try {
+          var req = indexedDB.open('ncg', 1);
+          req.onupgradeneeded = function (e) {
+            var d = e.target.result;
+            if (!d.objectStoreNames.contains('photos')) d.createObjectStore('photos', { keyPath: 'id' });
+          };
+          req.onsuccess = function (e) {
+            var db = e.target.result;
+            var tx = db.transaction('photos', 'readonly');
+            var g = tx.objectStore('photos').getAll();
+            g.onsuccess = function () { place(g.result || []); };
+          };
+        } catch (e) {}
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+      else setTimeout(init, 250);
+    })();
+
+    // === Legacy slideshow stub (disabled) ===
     (function () {
       function setup(photos) {
         function apply() {

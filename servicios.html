@@ -96,9 +96,25 @@
       footer .row { flex-direction: column; align-items: stretch; text-align: center; }
       footer .links { justify-content: center; gap: 18px 22px; }
     }
+    @media (max-width: 760px) {
+      header.hero { padding: clamp(110px,14vw,150px) clamp(14px,4vw,28px) clamp(28px,5vw,50px); }
+      header.hero h1 { font-size: clamp(32px,8vw,46px) !important; line-height: 1.06; }
+      header.hero p { font-size: 14px; }
+      .svc-grid { grid-template-columns: 1fr; padding: 0 14px clamp(32px,5vw,60px); }
+      .svc-card { padding: 22px 20px 20px; }
+      .timeline::before { left: 22px; }
+      .work-wrap { padding: 0 14px clamp(40px,5vw,70px); }
+      .events-wrap { padding: 0 14px clamp(40px,5vw,70px); }
+      .events-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .ev { padding: 18px 16px 16px; }
+      .ev h4 { font-size: 17px; }
+      .adapt-note { padding: 0 14px clamp(14px,3vw,24px); }
+      .sec-head h2 { font-size: clamp(24px,6vw,32px); }
+    }
     @media (max-width: 460px) {
       nav { padding: 12px 14px; }
       nav .brand .logo { font-size: 26px; }
+      .events-grid { grid-template-columns: 1fr; }
     }
 
     header.hero {

@@ -263,6 +263,8 @@
       This page requires JavaScript to display.
     </div>
   </noscript>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="assets/supabase.js"></script>
   <script>
     (function () {
       var VISIBLE = 4;   // slides visible at a time
@@ -373,18 +375,22 @@
           s.style.transform = ''; s.style.boxShadow = '0 18px 38px -22px rgba(63,51,40,0.45)';
         });
 
-        try {
-          var req = indexedDB.open('ncg', 1);
-          req.onupgradeneeded = function (e) { var d = e.target.result; if (!d.objectStoreNames.contains('photos')) d.createObjectStore('photos', { keyPath: 'id' }); };
-          req.onsuccess = function (e) {
-            var db = e.target.result;
-            var tx = db.transaction('photos', 'readonly');
-            var g = tx.objectStore('photos').getAll();
-            g.onsuccess = function () { render(g.result || []); setVisible(); };
-            g.onerror = function () { render([]); setVisible(); };
-          };
-          req.onerror = function () { render([]); setVisible(); };
-        } catch (e) { render([]); setVisible(); }
+        (async function () {
+          var photos = [];
+          try {
+            if (window.sb && window.NCG) {
+              var res = await window.sb
+                .from(window.NCG.TABLE)
+                .select('id, path, cat')
+                .order('created_at', { ascending: false });
+              if (!res.error && res.data) {
+                photos = res.data.map(function (r) { return { cat: r.cat, src: window.NCG.publicUrl(r.path) }; });
+              }
+            }
+          } catch (e) { console.error('[NCG] carousel load:', e); }
+          render(photos);
+          setVisible();
+        })();
       }
 
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCarousel);

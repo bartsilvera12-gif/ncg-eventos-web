@@ -536,7 +536,8 @@
 
     /* ============ RESPONSIVE ============ */
     .hamburger { display: none; }
-    @media (max-width: 900px) {
+    .sidebar-backdrop { display: none; }
+    @media (max-width: 0px) {
       body {
         grid-template-columns: 1fr;
         background: var(--bg);
@@ -1281,6 +1282,62 @@
     <span id="toast-msg">Guardado</span>
   </div>
 
+  <!-- ============ LOGIN OVERLAY ============ -->
+  <div id="login-overlay" style="position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#1A140E 0%,#221A12 100%);display:flex;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#FFFFFF;border-radius:16px;padding:36px 32px;width:100%;max-width:380px;box-shadow:0 22px 44px -22px rgba(0,0,0,0.5);font-family:'Inter',sans-serif;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+        <img src="assets/logo-ncg.jpeg" alt="NCG" style="width:42px;height:42px;border-radius:10px;object-fit:cover">
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#1A140E;line-height:1">NCG Eventos</div>
+          <div style="font-size:12px;color:#A39684;margin-top:2px;">Panel admin</div>
+        </div>
+      </div>
+      <h2 style="font-size:18px;color:#2A2018;margin-bottom:18px;font-weight:600;">Iniciar sesión</h2>
+      <form id="login-form" style="display:flex;flex-direction:column;gap:12px;">
+        <input id="login-email" type="email" autocomplete="username" required placeholder="email@ncgeventos.com" style="padding:11px 14px;border:1px solid rgba(74,61,48,0.18);border-radius:9px;font-size:14px;font-family:inherit;outline:none;">
+        <input id="login-pass" type="password" autocomplete="current-password" required placeholder="Contraseña" style="padding:11px 14px;border:1px solid rgba(74,61,48,0.18);border-radius:9px;font-size:14px;font-family:inherit;outline:none;">
+        <div id="login-err" style="color:#C0584A;font-size:13px;min-height:18px;"></div>
+        <button id="login-submit" type="submit" style="padding:12px;background:#1A140E;color:#FCF6EC;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">Entrar</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="assets/supabase.js"></script>
+  <script>
+    // ============ AUTH GATE ============
+    const loginOverlay = document.getElementById('login-overlay');
+    const loginForm = document.getElementById('login-form');
+    const loginErr = document.getElementById('login-err');
+    const loginSubmit = document.getElementById('login-submit');
+
+    async function checkAuth() {
+      const { data } = await window.sb.auth.getSession();
+      if (data && data.session) loginOverlay.style.display = 'none';
+      else loginOverlay.style.display = 'flex';
+    }
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginErr.textContent = '';
+      loginSubmit.disabled = true; loginSubmit.textContent = 'Entrando…';
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-pass').value;
+      const { error } = await window.sb.auth.signInWithPassword({ email, password });
+      loginSubmit.disabled = false; loginSubmit.textContent = 'Entrar';
+      if (error) { loginErr.textContent = 'Email o contraseña incorrectos'; return; }
+      loginOverlay.style.display = 'none';
+    });
+    window.sb.auth.onAuthStateChange((_evt, session) => {
+      loginOverlay.style.display = session ? 'none' : 'flex';
+    });
+    checkAuth();
+
+    async function ncgLogout() {
+      await window.sb.auth.signOut();
+      loginOverlay.style.display = 'flex';
+    }
+  </script>
+
   <script>
     const titles = {
       dashboard: 'Dashboard',
@@ -1576,74 +1633,14 @@
       renderPreview();
     });
 
-    // IndexedDB store for shared gallery photos (capacity ~GB vs ~5MB de localStorage)
-    const IDB_NAME = 'ncg';
-    const IDB_STORE = 'photos';
-    function idbOpen() {
-      return new Promise((res, rej) => {
-        const req = indexedDB.open(IDB_NAME, 1);
-        req.onupgradeneeded = e => {
-          const db = e.target.result;
-          if (!db.objectStoreNames.contains(IDB_STORE)) {
-            db.createObjectStore(IDB_STORE, { keyPath: 'id' });
-          }
-        };
-        req.onsuccess = e => res(e.target.result);
-        req.onerror  = e => rej(e.target.error);
-      });
-    }
-    async function idbGetAll() {
-      const db = await idbOpen();
-      return new Promise((res, rej) => {
-        const tx = db.transaction(IDB_STORE, 'readonly');
-        const req = tx.objectStore(IDB_STORE).getAll();
-        req.onsuccess = () => res(req.result || []);
-        req.onerror   = () => rej(req.error);
-      });
-    }
-    async function idbPut(entry) {
-      const db = await idbOpen();
-      return new Promise((res, rej) => {
-        const tx = db.transaction(IDB_STORE, 'readwrite');
-        const req = tx.objectStore(IDB_STORE).put(entry);
-        req.onsuccess = () => res(true);
-        req.onerror   = () => rej(req.error);
-      });
-    }
-    async function idbDelete(id) {
-      const db = await idbOpen();
-      return new Promise((res, rej) => {
-        const tx = db.transaction(IDB_STORE, 'readwrite');
-        const req = tx.objectStore(IDB_STORE).delete(id);
-        req.onsuccess = () => res(true);
-        req.onerror   = () => rej(req.error);
-      });
-    }
-    // One-time migration from old localStorage store
-    async function migrateLegacy() {
-      try {
-        const raw = localStorage.getItem('ncg_gallery_photos');
-        if (!raw) return;
-        const arr = JSON.parse(raw);
-        if (!Array.isArray(arr) || !arr.length) { localStorage.removeItem('ncg_gallery_photos'); return; }
-        for (const p of arr) {
-          if (!p.id) p.id = 'p' + Math.random().toString(36).slice(2);
-          await idbPut(p);
-        }
-        localStorage.removeItem('ncg_gallery_photos');
-      } catch {}
-    }
-    function readAsDataURL(file) {
-      return new Promise((res, rej) => {
+    // Compress image to a Blob before upload: max 1600px wide, JPEG q=0.82.
+    async function compressImage(file, maxW = 1600, quality = 0.82) {
+      const dataUrl = await new Promise((res, rej) => {
         const r = new FileReader();
         r.onload = () => res(r.result);
         r.onerror = rej;
         r.readAsDataURL(file);
       });
-    }
-    // Compress image: max 1600px wide, JPEG q=0.82. Reduces 4MB photos to ~200-400KB.
-    async function compressImage(file, maxW = 1600, quality = 0.82) {
-      const dataUrl = await readAsDataURL(file);
       const img = new Image();
       await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = dataUrl; });
       const scale = Math.min(1, maxW / img.width);
@@ -1654,54 +1651,87 @@
       const ctx = canvas.getContext('2d');
       ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, w, h);
       ctx.drawImage(img, 0, 0, w, h);
-      return canvas.toDataURL('image/jpeg', quality);
+      return await new Promise(res => canvas.toBlob(b => res(b), 'image/jpeg', quality));
     }
-    // restore existing stored photos into the admin grid on load
+    // Load existing photos from Supabase into the admin grid
     (async function restoreStored() {
-      await migrateLegacy();
-      const arr = await idbGetAll();
-      arr.forEach(p => {
-        const ph = document.createElement('div');
-        ph.className = 'ph';
-        ph.dataset.cat = p.cat;
-        ph.dataset.id = p.id;
-        ph.style.backgroundImage = `url(${p.src})`;
-        ph.style.backgroundSize = 'cover';
-        ph.style.backgroundPosition = 'center';
-        ph.innerHTML = `<span class="tg">${catLabels[p.cat] || 'Otro'}</span><span class="x">×</span>`;
-        galGrid.insertBefore(ph, galAdd.nextSibling);
-      });
-      updateGalCounts();
+      try {
+        const { data, error } = await window.sb
+          .from(window.NCG.TABLE)
+          .select('id, path, cat, name, created_at')
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        (data || []).forEach(p => {
+          const ph = document.createElement('div');
+          ph.className = 'ph';
+          ph.dataset.cat = p.cat;
+          ph.dataset.id = p.id;
+          ph.dataset.path = p.path;
+          ph.style.backgroundImage = `url(${window.NCG.publicUrl(p.path)})`;
+          ph.style.backgroundSize = 'cover';
+          ph.style.backgroundPosition = 'center';
+          ph.innerHTML = `<span class="tg">${catLabels[p.cat] || 'Otro'}</span><span class="x">×</span>`;
+          galGrid.insertBefore(ph, galAdd.nextSibling);
+        });
+        updateGalCounts();
+      } catch (e) {
+        console.error('[NCG] No pude cargar la galería:', e);
+        toast('Error cargando la galería');
+      }
     })();
 
     document.getElementById('up-save').addEventListener('click', async () => {
       if (!pendingFiles.length) { toast('Seleccioná al menos una imagen'); return; }
       const cat = upCat.value;
       const label = catLabels[cat] || 'Otro';
-      upSaveBtn.disabled = true; upSaveBtn.textContent = 'Procesando…';
+      upSaveBtn.disabled = true; upSaveBtn.textContent = 'Subiendo…';
 
-      let added = 0, skippedQuota = 0, errored = 0;
+      let added = 0, errored = 0;
       for (const f of pendingFiles) {
         try {
-          const dataUrl = await compressImage(f);
-          const id = 'p' + Math.floor(performance.now() * 1000) + '_' + added;
-          try {
-            await idbPut({ id, src: dataUrl, cat, name: f.name, date: Date.now() });
-          } catch (e) {
-            if (e && (e.name === 'QuotaExceededError' || /quota/i.test(e.message || ''))) { skippedQuota++; continue; }
-            throw e;
+          const blob = await compressImage(f);
+          const filename = `${cat}/${Date.now()}_${Math.random().toString(36).slice(2, 8)}.jpg`;
+          const { data: { session } } = await window.sb.auth.getSession();
+          const uploadResp = await fetch(
+            `https://api.neura.com.py/storage/v1/object/${window.NCG.BUCKET}/${filename}`,
+            {
+              method: 'POST',
+              headers: {
+                'authorization': 'Bearer ' + (session?.access_token || ''),
+                'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzc0MTAxNDYxLCJleHAiOjE5MzE3ODE0NjF9.7_wAph8IolPMXtgfpezSwS5XR62IdD__qhqCywLDp3Q',
+                'content-type': 'image/jpeg'
+              },
+              body: blob
+            }
+          );
+          if (!uploadResp.ok) {
+            const txt = await uploadResp.text();
+            throw new Error('Storage upload ' + uploadResp.status + ': ' + txt);
+          }
+          const { data: row, error: insErr } = await window.sb
+            .from(window.NCG.TABLE)
+            .insert({ path: filename, cat, name: f.name })
+            .select('id, path')
+            .single();
+          if (insErr) {
+            await window.sb.storage.from(window.NCG.BUCKET).remove([filename]);
+            throw insErr;
           }
           const ph = document.createElement('div');
           ph.className = 'ph';
           ph.dataset.cat = cat;
-          ph.dataset.id = id;
-          ph.style.backgroundImage = `url(${dataUrl})`;
+          ph.dataset.id = row.id;
+          ph.dataset.path = row.path;
+          ph.style.backgroundImage = `url(${window.NCG.publicUrl(row.path)})`;
           ph.style.backgroundSize = 'cover';
           ph.style.backgroundPosition = 'center';
           ph.innerHTML = `<span class="tg">${label}</span><span class="x">×</span>`;
           galGrid.insertBefore(ph, galAdd.nextSibling);
           added++;
-        } catch (e) { errored++; }
+        } catch (e) {
+          console.error('[NCG] upload error:', e);
+          errored++;
+        }
       }
 
       upSaveBtn.disabled = false;
@@ -1711,10 +1741,9 @@
       updateGalCounts();
       applyGalFilter();
 
-      if (added && !skippedQuota && !errored) toast(added + (added === 1 ? ' foto subida' : ' fotos subidas') + ' · visible en el sitio');
-      else if (added && skippedQuota) toast(added + ' subidas · ' + skippedQuota + ' sin espacio (borrá fotos viejas)');
-      else if (skippedQuota) toast('Sin espacio en almacenamiento · borrá fotos viejas');
-      else if (errored) toast('Hubo un problema procesando ' + errored + ' foto(s)');
+      if (added && !errored) toast(added + (added === 1 ? ' foto subida' : ' fotos subidas') + ' · visible en el sitio');
+      else if (added && errored) toast(added + ' subidas · ' + errored + ' fallaron');
+      else if (errored) toast('No se pudo subir (' + errored + ' foto/s)');
     });
 
     // delete photo with × button
@@ -1724,7 +1753,17 @@
       const ph = x.closest('.ph');
       if (!ph) return;
       const id = ph.dataset.id;
-      if (id) { try { await idbDelete(id); } catch {} }
+      const path = ph.dataset.path;
+      if (id) {
+        try {
+          if (path) await window.sb.storage.from(window.NCG.BUCKET).remove([path]);
+          await window.sb.from(window.NCG.TABLE).delete().eq('id', id);
+        } catch (err) {
+          console.error('[NCG] delete error:', err);
+          toast('No se pudo eliminar');
+          return;
+        }
+      }
       ph.remove();
       updateGalCounts();
       toast('Foto eliminada');

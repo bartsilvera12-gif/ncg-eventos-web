@@ -443,6 +443,8 @@
     </div>
   </footer>
 
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="assets/supabase.js"></script>
   <script>
     const ITEMS = [];
 
@@ -552,25 +554,22 @@
       if (e.key === 'ArrowRight') { lbIdx++; showLB(); }
     });
 
-    // Load uploaded photos from IndexedDB (fallback to legacy localStorage)
+    // Load uploaded photos from Supabase
     (async function loadUploaded() {
       let uploaded = [];
       try {
-        const db = await new Promise((res, rej) => {
-          const req = indexedDB.open('ncg', 1);
-          req.onupgradeneeded = e => { const d = e.target.result; if (!d.objectStoreNames.contains('photos')) d.createObjectStore('photos', { keyPath: 'id' }); };
-          req.onsuccess = e => res(e.target.result);
-          req.onerror = e => rej(e.target.error);
-        });
-        uploaded = await new Promise((res, rej) => {
-          const tx = db.transaction('photos', 'readonly');
-          const req = tx.objectStore('photos').getAll();
-          req.onsuccess = () => res(req.result || []);
-          req.onerror = () => rej(req.error);
-        });
-      } catch {}
-      if (!uploaded.length) {
-        try { uploaded = JSON.parse(localStorage.getItem('ncg_gallery_photos') || '[]'); } catch {}
+        const { data, error } = await window.sb
+          .from(window.NCG.TABLE)
+          .select('id, path, cat, name, created_at')
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        uploaded = (data || []).map(r => ({
+          id: r.id,
+          cat: r.cat,
+          src: window.NCG.publicUrl(r.path)
+        }));
+      } catch (e) {
+        console.error('[NCG] No pude cargar la galería:', e);
       }
       renderGallery(uploaded);
     })();

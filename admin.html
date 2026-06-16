@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel · NCG Eventos</title>
+  <link rel="icon" type="image/jpeg" href="assets/logo-ncg.jpeg">
+  <link rel="shortcut icon" type="image/jpeg" href="assets/logo-ncg.jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F4EEE2;
+      --bg-card: #FFFFFF;
+      --bg-card-2: #FAF5EB;
+      --side: #1A140E;
+      --side-2: #221A12;
+      --side-line: rgba(218,174,78,0.14);
+      --text: #2A2018;
+      --text-soft: #6E6051;
+      --text-muted: #A39684;
+      --side-text: #B8A88E;
+      --side-text-active: #FCF6EC;
+      --gold: #DAAE4E;
+      --gold-2: #C49A45;
+      --coral: #C16B4F;
+      --coral-2: #D9683F;
+      --green: #4F9F7F;
+      --amber: #D49B3D;
+      --red: #C0584A;
+      --blue: #5A7AA8;
+      --border: rgba(74,61,48,0.10);
+      --shadow-sm: 0 2px 6px rgba(40,30,20,0.06);
+      --shadow: 0 8px 22px -10px rgba(40,30,20,0.18);
+      --shadow-lg: 0 22px 44px -22px rgba(40,30,20,0.25);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif; font-size: 14px;
+      background: linear-gradient(to right, #1A140E 260px, var(--bg) 260px);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      display: grid; grid-template-columns: 260px 1fr; min-height: 100vh;
+    }
+    @media (max-width: 900px) {
+      body { background: var(--bg); }
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+    ::selection { background: rgba(193,107,79,0.25); }
+
+    /* ============ SIDEBAR ============ */
+    .sidebar {
+      background: linear-gradient(180deg, var(--side) 0%, var(--side-2) 100%);
+      color: var(--side-text);
+      display: flex; flex-direction: column;
+      position: sticky; top: 0; height: 100vh;
+      border-right: 1px solid var(--side-line);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(218,174,78,0.3) transparent;
+    }
+    .sidebar::-webkit-scrollbar { width: 6px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: rgba(218,174,78,0.2); border-radius: 3px; }
+    .sidebar::-webkit-scrollbar-thumb:hover { background: rgba(218,174,78,0.4); }
+    .sidebar .brand {
+      display: flex; align-items: center; gap: 12px;
+      padding: 22px 22px 20px;
+      border-bottom: 1px solid var(--side-line);
+    }
+    .sidebar .brand .logo-box {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: #FCF6EC;
+      padding: 2px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 6px 16px -6px rgba(218,174,78,0.5), inset 0 0 0 1px rgba(218,174,78,0.35);
+    }
+    .sidebar .brand .logo-box img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 9px; display: block;
+    }
+    .sidebar .brand .name { display: flex; flex-direction: column; line-height: 1.1; }
+    .sidebar .brand .name .t1 { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 700; color: var(--side-text-active); letter-spacing: 0.06em; }
+    .sidebar .brand .name .t2 { font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); margin-top: 2px; }
+
+    .sidebar .search {
+      margin: 16px 18px 8px;
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px; padding: 9px 12px;
+    }
+    .sidebar .search input { background: none; border: none; outline: none; color: var(--side-text-active); font-size: 13px; flex: 1; }
+    .sidebar .search input::placeholder { color: var(--side-text); }
+    .sidebar .search kbd { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--side-text); font-family: inherit; }
+
+    .sidebar .group { padding: 16px 14px 6px; }
+    .sidebar .group-title { font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--side-text); padding: 0 10px 8px; }
+    .sidebar nav { display: flex; flex-direction: column; gap: 2px; }
+    .sidebar nav a {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px; border-radius: 9px;
+      font-size: 13.5px; color: var(--side-text);
+      transition: background .2s, color .2s, transform .15s;
+      position: relative;
+    }
+    .sidebar nav a svg { width: 18px; height: 18px; stroke: currentColor; flex-shrink: 0; }
+    .sidebar nav a:hover { background: rgba(255,255,255,0.04); color: var(--side-text-active); }
+    .sidebar nav a.active {
+      background: linear-gradient(120deg, rgba(218,174,78,0.18), rgba(193,107,79,0.16));
+      color: var(--side-text-active);
+      box-shadow: inset 0 0 0 1px rgba(218,174,78,0.22);
+    }
+    .sidebar nav a.active::before {
+      content: ""; position: absolute; left: -14px; top: 8px; bottom: 8px;
+      width: 3px; border-radius: 2px;
+      background: linear-gradient(180deg, var(--gold), var(--coral));
+    }
+    .sidebar nav a .badge {
+      margin-left: auto; font-size: 11px; padding: 2px 7px; border-radius: 999px;
+      background: var(--coral); color: var(--side-text-active); font-weight: 500;
+    }
+
+    .sidebar .profile {
+      margin-top: auto; padding: 14px 14px 18px;
+      border-top: 1px solid var(--side-line);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .sidebar .profile .avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--coral), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      color: #1A140E; font-weight: 600; font-size: 14px;
+    }
+    .sidebar .profile .info { display: flex; flex-direction: column; line-height: 1.2; flex: 1; min-width: 0; }
+    .sidebar .profile .info .n { font-size: 13px; color: var(--side-text-active); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar .profile .info .r { font-size: 11px; color: var(--side-text); }
+    .sidebar .profile .more { color: var(--side-text); padding: 6px; border-radius: 6px; transition: background .2s; }
+    .sidebar .profile .more:hover { background: rgba(255,255,255,0.06); color: var(--side-text-active); }
+
+    /* ============ MAIN ============ */
+    .main { display: flex; flex-direction: column; min-width: 0; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 30;
+      background: rgba(244,238,226,0.85); backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 30px;
+    }
+    .topbar .crumb { display: flex; flex-direction: column; line-height: 1.15; }
+    .topbar .crumb .small { font-size: 11.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); }
+    .topbar .crumb h1 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--text); margin-top: 2px; }
+    .topbar .grow { flex: 1; }
+    .topbar .iconbtn {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-soft); transition: color .2s, transform .15s, box-shadow .2s;
+      position: relative;
+    }
+    .topbar .iconbtn:hover { color: var(--coral); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+    .topbar .iconbtn .dot { position: absolute; top: 9px; right: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--coral); border: 2px solid var(--bg-card); }
+    .topbar .cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(120deg, var(--coral), var(--coral-2));
+      color: #FCF6EC; font-size: 13px; font-weight: 500;
+      padding: 10px 18px; border-radius: 10px;
+      box-shadow: 0 10px 22px -10px rgba(193,107,79,0.6);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .topbar .cta:hover { transform: translateY(-1px); box-shadow: 0 14px 28px -10px rgba(193,107,79,0.7); }
+
+    .content { padding: 28px 30px 60px; flex: 1; }
+
+    /* ============ KPI CARDS ============ */
+    .kpis {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px; margin-bottom: 24px;
+    }
+    .kpi {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+      position: relative; overflow: hidden;
+    }
+    .kpi::before {
+      content: ""; position: absolute; top: 0; right: 0; width: 80px; height: 80px;
+      border-radius: 50%; filter: blur(40px); opacity: 0.4;
+    }
+    .kpi.k-1::before { background: var(--gold); }
+    .kpi.k-2::before { background: var(--coral); }
+    .kpi.k-3::before { background: var(--blue); }
+    .kpi.k-4::before { background: var(--green); }
+    .kpi .top { display: flex; align-items: center; justify-content: space-between; }
+    .kpi .label { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); }
+    .kpi .icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, rgba(218,174,78,0.16), rgba(193,107,79,0.14));
+      color: var(--coral);
+    }
+    .kpi .value {
+      font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 700;
+      color: var(--text); margin-top: 12px; line-height: 1;
+    }
+    .kpi .delta { margin-top: 8px; font-size: 12px; display: flex; align-items: center; gap: 5px; }
+    .kpi .delta.up { color: var(--green); }
+    .kpi .delta.down { color: var(--red); }
+    .kpi .delta span { color: var(--text-muted); }
+
+    /* ============ CARDS / SECTIONS ============ */
+    .row { display: grid; gap: 20px; }
+    .row.two { grid-template-columns: 2fr 1fr; }
+    .row.three { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 1100px) {
+      .row.two, .row.three { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .card .hd {
+      padding: 18px 22px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .card .hd h3 { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--text); }
+    .card .hd .sub { font-size: 12px; color: var(--text-muted); margin-left: 4px; }
+    .card .hd .grow { flex: 1; }
+    .card .hd .link { font-size: 12.5px; color: var(--coral); display: inline-flex; align-items: center; gap: 4px; transition: gap .2s; }
+    .card .hd .link:hover { gap: 8px; }
+    .card .bd { padding: 16px 22px 20px; }
+
+    /* ============ TABLE ============ */
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    table th { text-align: left; font-weight: 500; color: var(--text-muted); padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; }
+    table td { padding: 13px 14px; border-bottom: 1px solid rgba(74,61,48,0.06); }
+    table tr:hover td { background: rgba(218,174,78,0.05); }
+    table tr:last-child td { border-bottom: none; }
+    table .who { display: flex; align-items: center; gap: 10px; }
+    table .who .av {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--coral));
+      display: flex; align-items: center; justify-content: center;
+      color: #1A140E; font-weight: 600; font-size: 12px; flex-shrink: 0;
+    }
+    table .who .nm { font-weight: 500; line-height: 1.2; }
+    table .who .sb { font-size: 11.5px; color: var(--text-muted); }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11.5px; padding: 4px 10px; border-radius: 999px; font-weight: 500;
+    }
+    .pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .pill.green { color: var(--green); background: rgba(79,159,127,0.12); }
+    .pill.amber { color: var(--amber); background: rgba(212,155,61,0.12); }
+    .pill.blue { color: var(--blue); background: rgba(90,122,168,0.12); }
+    .pill.red { color: var(--red); background: rgba(192,88,74,0.12); }
+    .pill.gray { color: var(--text-muted); background: rgba(74,61,48,0.08); }
+
+    .action {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 7px;
+      color: var(--text-muted); transition: color .2s, background .2s;
+    }
+    .action:hover { color: var(--coral); background: rgba(193,107,79,0.08); }
+
+    /* ============ CHART (CSS bars) ============ */
+    .chart { display: flex; align-items: flex-end; gap: 12px; height: 200px; padding: 8px 0 0; }
+    .chart .bar { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .chart .bar .bg {
+      width: 100%; max-width: 36px;
+      background: linear-gradient(180deg, var(--gold) 0%, var(--coral) 100%);
+      border-radius: 6px 6px 0 0;
+      transition: transform .3s, filter .3s;
+      box-shadow: 0 -6px 16px -6px rgba(218,174,78,0.4);
+    }
+    .chart .bar:hover .bg { transform: scaleY(1.04); filter: brightness(1.05); }
+    .chart .bar .lbl { font-size: 11px; color: var(--text-muted); }
+    .chart .bar .val { font-size: 12px; font-weight: 600; color: var(--text); }
+
+    /* ============ DONUT ============ */
+    .donut { display: flex; align-items: center; gap: 22px; padding: 6px 0; }
+    .donut svg { width: 130px; height: 130px; flex-shrink: 0; }
+    .donut .legend { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .donut .legend .ln { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+    .donut .legend .ln .sw { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+    .donut .legend .ln .nm { flex: 1; color: var(--text-soft); }
+    .donut .legend .ln .vl { font-weight: 600; color: var(--text); }
+
+    /* ============ ACTIVITY ============ */
+    .activity { display: flex; flex-direction: column; }
+    .activity .item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(74,61,48,0.05); }
+    .activity .item:last-child { border-bottom: none; }
+    .activity .dot {
+      width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(218,174,78,0.15), rgba(193,107,79,0.12));
+      color: var(--coral);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .activity .it { flex: 1; min-width: 0; }
+    .activity .it .ti { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.3; }
+    .activity .it .sb { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+    .activity .it .ts { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ============ VIEW SWITCHER ============ */
+    .view { display: none; animation: fade .25s ease; }
+    .view.show { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ============ FILTERS ============ */
+    .filters {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .filters .chip {
+      padding: 8px 14px; border-radius: 999px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      font-size: 12.5px; color: var(--text-soft);
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .filters .chip:hover { color: var(--coral); border-color: rgba(193,107,79,0.4); }
+    .filters .chip.active { background: linear-gradient(120deg, var(--coral), var(--coral-2)); color: #FCF6EC; border-color: transparent; box-shadow: 0 8px 18px -8px rgba(193,107,79,0.55); }
+    .filters .field {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      padding: 8px 12px; border-radius: 10px;
+      font-size: 13px; color: var(--text-soft);
+    }
+    .filters .field input { border: none; outline: none; background: none; font-size: 13px; color: var(--text); min-width: 200px; font-family: inherit; }
+    .filters .grow { flex: 1; }
+    .btn-secondary {
+      background: var(--bg-card); border: 1px solid var(--border);
+      padding: 9px 16px; border-radius: 10px;
+      font-size: 13px; color: var(--text-soft);
+      display: inline-flex; align-items: center; gap: 7px;
+      transition: color .2s, border-color .2s;
+    }
+    .btn-secondary:hover { color: var(--coral); border-color: rgba(193,107,79,0.4); }
+
+    /* ============ CATALOG GRID ============ */
+    .cat-tabs { display: flex; gap: 4px; padding: 8px; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border); margin-bottom: 18px; overflow-x: auto; }
+    .cat-tabs button { padding: 8px 14px; border-radius: 8px; font-size: 13px; color: var(--text-soft); white-space: nowrap; transition: background .2s, color .2s; }
+    .cat-tabs button:hover { color: var(--coral); }
+    .cat-tabs button.active { background: linear-gradient(120deg, rgba(218,174,78,0.18), rgba(193,107,79,0.15)); color: var(--text); font-weight: 500; }
+    .grid-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+    .gi {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px 16px 14px;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+      position: relative;
+    }
+    .gi:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: rgba(193,107,79,0.3); }
+    .gi .ic { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, rgba(218,174,78,0.18), rgba(193,107,79,0.14)); color: var(--coral); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+    .gi h4 { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--text); font-weight: 600; line-height: 1.15; }
+    .gi .sp { font-size: 12px; color: var(--text-muted); margin-top: 5px; }
+    .gi .ft { margin-top: 12px; display: flex; align-items: center; gap: 10px; }
+    .gi .ft .st { font-size: 11.5px; color: var(--text-soft); padding: 3px 9px; border-radius: 999px; background: rgba(74,61,48,0.06); }
+    .gi .ft .pr { margin-left: auto; font-weight: 600; color: var(--text); font-size: 13.5px; }
+    .gi .low { color: var(--red) !important; background: rgba(192,88,74,0.12) !important; }
+
+    /* ============ CALENDAR ============ */
+    .cal { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; }
+    @media (max-width: 1000px) { .cal { grid-template-columns: 1fr; } }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+    .cal-grid .dn { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); text-align: center; padding: 8px 0; }
+    .cal-grid .dy {
+      background: var(--bg-card-2); border: 1px solid var(--border);
+      border-radius: 9px; padding: 8px 10px; min-height: 70px;
+      display: flex; flex-direction: column; gap: 4px;
+      transition: border-color .2s, background .2s; cursor: pointer;
+    }
+    .cal-grid .dy:hover { border-color: rgba(193,107,79,0.35); background: var(--bg-card); }
+    .cal-grid .dy.muted { opacity: 0.35; }
+    .cal-grid .dy .nd { font-size: 12.5px; font-weight: 500; color: var(--text); }
+    .cal-grid .dy .ev { font-size: 10.5px; padding: 2px 6px; border-radius: 4px; background: linear-gradient(120deg, var(--gold), var(--coral)); color: #FFFFFF; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cal-grid .dy.today { border-color: var(--coral); box-shadow: 0 0 0 2px rgba(193,107,79,0.15); }
+
+    /* ============ CONSULTAS / INBOX ============ */
+    .inbox { display: flex; flex-direction: column; }
+    .inbox .msg { display: grid; grid-template-columns: 38px 1fr auto; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(74,61,48,0.06); align-items: start; cursor: pointer; transition: background .15s; padding-left: 14px; padding-right: 14px; margin: 0 -14px; border-radius: 8px; }
+    .inbox .msg:hover { background: rgba(218,174,78,0.06); }
+    .inbox .msg .av {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--coral), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      color: #1A140E; font-weight: 600; font-size: 13px;
+    }
+    .inbox .msg .n { font-weight: 500; color: var(--text); font-size: 13.5px; }
+    .inbox .msg .s { font-size: 13px; color: var(--text-soft); margin-top: 2px; line-height: 1.4; max-width: 540px; }
+    .inbox .msg .t { font-size: 11.5px; color: var(--text-muted); white-space: nowrap; }
+
+    /* ============ FORM / SETTINGS ============ */
+    .form-row { display: grid; grid-template-columns: 200px 1fr; gap: 18px; padding: 14px 0; border-bottom: 1px solid rgba(74,61,48,0.06); align-items: center; }
+    .form-row:last-child { border-bottom: none; }
+    .form-row .lb { font-size: 13px; color: var(--text-soft); font-weight: 500; }
+    .form-row .hp { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .form-row input, .form-row select, .form-row textarea {
+      width: 100%; padding: 10px 12px; border-radius: 9px;
+      border: 1px solid var(--border); background: var(--bg-card-2);
+      font-size: 13.5px; color: var(--text); font-family: inherit;
+      transition: border-color .2s;
+    }
+    .form-row input:focus, .form-row select:focus, .form-row textarea:focus { outline: none; border-color: var(--coral); background: var(--bg-card); }
+    .switch { width: 42px; height: 24px; border-radius: 999px; background: rgba(74,61,48,0.18); position: relative; cursor: pointer; transition: background .2s; }
+    .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: transform .2s; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+    .switch.on { background: linear-gradient(120deg, var(--coral), var(--coral-2)); }
+    .switch.on::after { transform: translateX(18px); }
+
+    /* ============ GALLERY ============ */
+    .gal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+    .gal-grid .ph {
+      aspect-ratio: 1; border-radius: 10px; overflow: hidden; position: relative;
+      background: linear-gradient(135deg, var(--gold), var(--coral));
+      cursor: pointer; transition: transform .2s;
+    }
+    .gal-grid .ph.q { background: linear-gradient(135deg, #FBE3CF, var(--gold-2)); }
+    .gal-grid .ph.c { background: linear-gradient(135deg, var(--side), var(--text-soft)); }
+    .gal-grid .ph.k { background: linear-gradient(135deg, var(--gold), var(--coral-2)); }
+    .gal-grid .ph:hover { transform: scale(1.02); }
+    .gal-grid .ph .tg { position: absolute; top: 8px; left: 8px; font-size: 10.5px; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,0.85); color: var(--text); font-weight: 500; }
+    .gal-grid .ph .x { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; border-radius: 50%; background: rgba(0,0,0,0.45); color: #fff; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .2s; }
+    .gal-grid .ph:hover .x { opacity: 1; }
+    .gal-grid .add {
+      aspect-ratio: 1; border-radius: 10px;
+      border: 2px dashed rgba(74,61,48,0.2); background: var(--bg-card-2);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+      color: var(--text-muted); font-size: 12px; transition: border-color .2s, color .2s;
+    }
+    .gal-grid .add:hover { border-color: var(--coral); color: var(--coral); }
+
+    /* ============ DROPDOWN + MODAL ============ */
+    .pop-wrap { position: relative; }
+    .pop {
+      position: absolute; top: calc(100% + 8px); right: 0; z-index: 60;
+      width: 360px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; box-shadow: var(--shadow-lg);
+      opacity: 0; transform: translateY(-6px) scale(0.98);
+      pointer-events: none; transition: opacity .18s, transform .18s;
+    }
+    .pop.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+    .pop .ph { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+    .pop .ph h4 { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--text); flex: 1; }
+    .pop .ph .ln { font-size: 12px; color: var(--coral); }
+    .pop .pb { max-height: 360px; overflow-y: auto; }
+    .pop .pf { padding: 12px 16px; border-top: 1px solid var(--border); text-align: center; }
+    .pop .pf a { font-size: 12.5px; color: var(--coral); font-weight: 500; }
+
+    .notif { display: flex; gap: 12px; padding: 12px 16px; border-bottom: 1px solid rgba(74,61,48,0.05); cursor: pointer; transition: background .15s; }
+    .notif:hover { background: rgba(218,174,78,0.06); }
+    .notif:last-child { border-bottom: none; }
+    .notif .ico {
+      width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(218,174,78,0.18), rgba(193,107,79,0.14));
+      color: var(--coral);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .notif.unread { background: rgba(218,174,78,0.05); }
+    .notif.unread .ico { background: linear-gradient(135deg, var(--coral), var(--gold)); color: #fff; }
+    .notif .tx .t { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.3; }
+    .notif .tx .s { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+    .notif .tx .ts { font-size: 10.5px; color: var(--text-muted); margin-top: 3px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+    .filtbox { padding: 14px 16px; }
+    .filtbox .ttl { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin: 10px 0 6px; }
+    .filtbox .ttl:first-child { margin-top: 0; }
+    .filtbox .opts { display: flex; flex-wrap: wrap; gap: 6px; }
+    .filtbox .opt {
+      font-size: 12px; padding: 6px 11px; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--bg-card-2);
+      color: var(--text-soft); cursor: pointer; transition: all .15s;
+    }
+    .filtbox .opt:hover { border-color: var(--coral); color: var(--coral); }
+    .filtbox .opt.on { background: linear-gradient(120deg, var(--coral), var(--coral-2)); color: #fff; border-color: transparent; }
+    .filtbox .range { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .filtbox .range input { padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card-2); font-size: 12.5px; color: var(--text); font-family: inherit; outline: none; }
+    .filtbox .range input:focus { border-color: var(--coral); }
+    .filtbox .ftr { display: flex; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+    .filtbox .ftr button { flex: 1; padding: 9px 12px; border-radius: 8px; font-size: 12.5px; font-weight: 500; cursor: pointer; transition: all .2s; }
+    .filtbox .ftr .clear { background: var(--bg-card-2); color: var(--text-soft); border: 1px solid var(--border); }
+    .filtbox .ftr .apply { background: linear-gradient(120deg, var(--coral), var(--coral-2)); color: #fff; border: none; }
+
+    .backdrop {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(20,14,8,0.55); backdrop-filter: blur(4px);
+      display: none; align-items: flex-start; justify-content: center;
+      padding: 60px 20px;
+      animation: bdfade .2s ease;
+    }
+    @keyframes bdfade { from { opacity: 0; } to { opacity: 1; } }
+    .backdrop.open { display: flex; }
+    .modal {
+      background: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow-lg);
+      width: 100%; max-width: 680px; max-height: calc(100vh - 120px);
+      overflow: hidden; display: flex; flex-direction: column;
+      animation: mdslide .25s cubic-bezier(.2,.8,.3,1.1);
+    }
+    @keyframes mdslide { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal .mh { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .modal .mh h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--text); flex: 1; }
+    .modal .mh .x { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: background .15s, color .15s; }
+    .modal .mh .x:hover { background: rgba(74,61,48,0.06); color: var(--text); }
+    .modal .mb { padding: 20px 24px; overflow-y: auto; }
+    .modal .mf { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+    .modal .mf .btn { padding: 10px 22px; border-radius: 9px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all .2s; font-family: inherit; }
+    .modal .mf .btn.cancel { background: var(--bg-card-2); color: var(--text-soft); border: 1px solid var(--border); }
+    .modal .mf .btn.cancel:hover { color: var(--text); }
+    .modal .mf .btn.save { background: linear-gradient(120deg, var(--coral), var(--coral-2)); color: #FCF6EC; border: none; box-shadow: 0 8px 18px -8px rgba(193,107,79,0.55); }
+    .modal .mf .btn.save:hover { transform: translateY(-1px); }
+    .modal .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .modal label { display: block; }
+    .modal label .lb { font-size: 12px; color: var(--text-soft); margin-bottom: 5px; font-weight: 500; }
+    .modal label input, .modal label select, .modal label textarea {
+      width: 100%; padding: 10px 12px; border-radius: 9px;
+      border: 1px solid var(--border); background: var(--bg-card-2);
+      font-size: 13.5px; color: var(--text); font-family: inherit;
+      transition: border-color .15s;
+    }
+    .modal label input:focus, .modal label select:focus, .modal label textarea:focus { outline: none; border-color: var(--coral); background: var(--bg-card); }
+    .modal label.full { grid-column: 1 / -1; }
+    .toast {
+      position: fixed; bottom: 22px; right: 22px; z-index: 200;
+      background: var(--text); color: #FCF6EC;
+      padding: 12px 18px 12px 14px; border-radius: 10px;
+      box-shadow: var(--shadow-lg);
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13.5px; font-weight: 500;
+      transform: translateY(20px); opacity: 0; pointer-events: none;
+      transition: opacity .2s, transform .2s;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    .toast .ic { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--coral)); display: flex; align-items: center; justify-content: center; color: var(--text); }
+
+    /* responsive sidebar (basic) */
+    @media (max-width: 900px) {
+      body { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo-box"><img src="assets/logo-ncg.jpeg" alt="NCG Eventos"></div>
+      <div class="name">
+        <span class="t1">NCG</span>
+        <span class="t2">Panel admin</span>
+      </div>
+    </div>
+
+    <div class="search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input placeholder="Buscar…" />
+      <kbd>⌘K</kbd>
+    </div>
+
+    <div class="group">
+      <div class="group-title">Operación</div>
+      <nav>
+        <a href="#dashboard" data-view="dashboard" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          Dashboard
+        </a>
+        <a href="#eventos" data-view="eventos">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+          Eventos
+          <span class="badge">12</span>
+        </a>
+        <a href="#calendario" data-view="calendario">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 10h18M8 2v4M16 2v4M9 14l2 2 4-4"/></svg>
+          Calendario
+        </a>
+        <a href="#consultas" data-view="consultas">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/></svg>
+          Consultas
+          <span class="badge">4</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="group">
+      <div class="group-title">Negocio</div>
+      <nav>
+        <a href="#clientes" data-view="clientes">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>
+          Clientes
+        </a>
+        <a href="#catalogo" data-view="catalogo">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg>
+          Catálogo
+        </a>
+        <a href="#servicios" data-view="servicios">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          Servicios
+        </a>
+        <a href="#galeria" data-view="galeria">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          Galería
+        </a>
+      </nav>
+    </div>
+
+    <div class="group">
+      <div class="group-title">Análisis</div>
+      <nav>
+        <a href="#finanzas" data-view="finanzas">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg>
+          Finanzas
+        </a>
+        <a href="#reportes" data-view="reportes">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-7"/></svg>
+          Reportes
+        </a>
+      </nav>
+    </div>
+
+    <div class="group">
+      <div class="group-title">Sistema</div>
+      <nav>
+        <a href="#configuracion" data-view="configuracion">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          Configuración
+        </a>
+        <a href="NCG Eventos - Web (standalone).html" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14L21 3"/></svg>
+          Ver sitio
+        </a>
+      </nav>
+    </div>
+
+    <div class="profile">
+      <div class="avatar">AA</div>
+      <div class="info">
+        <span class="n">Alan Ayala</span>
+        <span class="r">Administrador</span>
+      </div>
+      <button class="more" aria-label="Más">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="crumb">
+        <span class="small">NCG Eventos</span>
+        <h1 id="page-title">Dashboard</h1>
+      </div>
+      <div class="grow"></div>
+      <div class="pop-wrap">
+        <button class="iconbtn" id="btn-notif" title="Notificaciones">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span class="dot" id="notif-dot"></span>
+        </button>
+        <div class="pop" id="pop-notif">
+          <div class="ph"><h4>Notificaciones</h4><a href="#" class="ln" id="mark-read">Marcar como leídas</a></div>
+          <div class="pb" id="notif-list">
+            <div class="notif unread"><div class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4L12 14.01l-3-3"/></svg></div><div class="tx"><div class="t">María López confirmó su boda</div><div class="s">Pago de saldo recibido · ₲ 12.950.000</div><div class="ts">Hace 18 min</div></div></div>
+            <div class="notif unread"><div class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/></svg></div><div class="tx"><div class="t">Nueva consulta de Lucía Vera</div><div class="s">Quince · 22 Sep · 100 invitados</div><div class="ts">Hace 1 h</div></div></div>
+            <div class="notif unread"><div class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.86L1.82 18a2 2 0 0 0 1.7 3h16.96a2 2 0 0 0 1.7-3L13.7 3.86a2 2 0 0 0-3.4 0z"/></svg></div><div class="tx"><div class="t">Stock bajo: Copa champagne</div><div class="s">Quedan 12 unidades disponibles</div><div class="ts">Hace 3 h</div></div></div>
+            <div class="notif unread"><div class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg></div><div class="tx"><div class="t">Andrea Silva pagó la seña</div><div class="s">Cumpleaños 40 · ₲ 1.440.000</div><div class="ts">Ayer</div></div></div>
+            <div class="notif"><div class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div><div class="tx"><div class="t">Subiste 8 fotos a la galería</div><div class="s">Boda Pereira · 12 Jun</div><div class="ts">Ayer</div></div></div>
+          </div>
+          <div class="pf"><a href="#configuracion" onclick="setView('configuracion');closeAllPops();">Configurar notificaciones →</a></div>
+        </div>
+      </div>
+      <div class="pop-wrap">
+        <button class="iconbtn" id="btn-filter" title="Filtros">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 3H2l8 9.5V19l4 2v-8.5L22 3z"/></svg>
+        </button>
+        <div class="pop" id="pop-filter">
+          <div class="ph"><h4>Filtros rápidos</h4></div>
+          <div class="filtbox">
+            <div class="ttl">Estado</div>
+            <div class="opts" data-group="status">
+              <button class="opt on" data-v="all">Todos</button>
+              <button class="opt" data-v="pending">Pendientes</button>
+              <button class="opt" data-v="confirmed">Confirmados</button>
+              <button class="opt" data-v="done">Realizados</button>
+              <button class="opt" data-v="cancelled">Cancelados</button>
+            </div>
+            <div class="ttl">Tipo de evento</div>
+            <div class="opts" data-group="type">
+              <button class="opt on" data-v="all">Todos</button>
+              <button class="opt" data-v="boda">Bodas</button>
+              <button class="opt" data-v="quince">Quinces</button>
+              <button class="opt" data-v="corporativo">Corporativos</button>
+              <button class="opt" data-v="cumple">Cumpleaños</button>
+              <button class="opt" data-v="otro">Otros</button>
+            </div>
+            <div class="ttl">Rango de fechas</div>
+            <div class="range">
+              <input type="date" id="fdate-from">
+              <input type="date" id="fdate-to">
+            </div>
+            <div class="ftr">
+              <button class="clear" id="f-clear">Limpiar</button>
+              <button class="apply" id="f-apply">Aplicar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="cta" id="btn-new-event">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+        Nuevo evento
+      </button>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- =========== DASHBOARD =========== -->
+      <section class="view show" id="v-dashboard">
+
+        <div class="kpis">
+          <div class="kpi k-1">
+            <div class="top">
+              <span class="label">Eventos este mes</span>
+              <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div>
+            </div>
+            <div class="value">12</div>
+            <div class="delta up">▲ 3 <span>vs. mes anterior</span></div>
+          </div>
+          <div class="kpi k-2">
+            <div class="top">
+              <span class="label">Ingresos</span>
+              <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg></div>
+            </div>
+            <div class="value">₲ 48.5M</div>
+            <div class="delta up">▲ 12% <span>vs. mes anterior</span></div>
+          </div>
+          <div class="kpi k-3">
+            <div class="top">
+              <span class="label">Consultas nuevas</span>
+              <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v12H5l-1 4z"/></svg></div>
+            </div>
+            <div class="value">23</div>
+            <div class="delta up">▲ 7 <span>esta semana</span></div>
+          </div>
+          <div class="kpi k-4">
+            <div class="top">
+              <span class="label">Clientes activos</span>
+              <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+            </div>
+            <div class="value">87</div>
+            <div class="delta up">▲ 5 <span>este mes</span></div>
+          </div>
+        </div>
+
+        <div class="row two" style="margin-bottom:20px;">
+          <div class="card">
+            <div class="hd">
+              <h3>Ingresos por mes</h3>
+              <span class="sub">últimos 6 meses</span>
+              <span class="grow"></span>
+              <a class="link">Ver detalle →</a>
+            </div>
+            <div class="bd">
+              <div class="chart">
+                <div class="bar"><div class="bg" style="height:42%"></div><div class="val">₲22M</div><div class="lbl">Ene</div></div>
+                <div class="bar"><div class="bg" style="height:58%"></div><div class="val">₲30M</div><div class="lbl">Feb</div></div>
+                <div class="bar"><div class="bg" style="height:48%"></div><div class="val">₲25M</div><div class="lbl">Mar</div></div>
+                <div class="bar"><div class="bg" style="height:72%"></div><div class="val">₲37M</div><div class="lbl">Abr</div></div>
+                <div class="bar"><div class="bg" style="height:80%"></div><div class="val">₲41M</div><div class="lbl">May</div></div>
+                <div class="bar"><div class="bg" style="height:96%"></div><div class="val">₲48M</div><div class="lbl">Jun</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="hd">
+              <h3>Tipos de evento</h3>
+              <span class="sub">este trimestre</span>
+            </div>
+            <div class="bd">
+              <div class="donut">
+                <svg viewBox="0 0 42 42">
+                  <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="rgba(74,61,48,0.08)" stroke-width="6"/>
+                  <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#C16B4F" stroke-width="6" stroke-dasharray="35 65" stroke-dashoffset="0" transform="rotate(-90 21 21)"/>
+                  <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#DAAE4E" stroke-width="6" stroke-dasharray="25 75" stroke-dashoffset="-35" transform="rotate(-90 21 21)"/>
+                  <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#5A7AA8" stroke-width="6" stroke-dasharray="20 80" stroke-dashoffset="-60" transform="rotate(-90 21 21)"/>
+                  <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#4F9F7F" stroke-width="6" stroke-dasharray="20 80" stroke-dashoffset="-80" transform="rotate(-90 21 21)"/>
+                  <text x="21" y="22" text-anchor="middle" font-family="Cormorant Garamond" font-size="9" fill="#2A2018" font-weight="700">38</text>
+                  <text x="21" y="27" text-anchor="middle" font-size="2.6" fill="#A39684">eventos</text>
+                </svg>
+                <div class="legend">
+                  <div class="ln"><span class="sw" style="background:#C16B4F"></span><span class="nm">Bodas</span><span class="vl">35%</span></div>
+                  <div class="ln"><span class="sw" style="background:#DAAE4E"></span><span class="nm">Quinces</span><span class="vl">25%</span></div>
+                  <div class="ln"><span class="sw" style="background:#5A7AA8"></span><span class="nm">Corporativos</span><span class="vl">20%</span></div>
+                  <div class="ln"><span class="sw" style="background:#4F9F7F"></span><span class="nm">Cumpleaños / otros</span><span class="vl">20%</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row two">
+          <div class="card">
+            <div class="hd">
+              <h3>Próximos eventos</h3>
+              <span class="sub">7 días</span>
+              <span class="grow"></span>
+              <a class="link" onclick="setView('eventos')">Ver todos →</a>
+            </div>
+            <table>
+              <thead><tr><th>Cliente</th><th>Tipo</th><th>Fecha</th><th>Inv.</th><th>Estado</th><th>Monto</th><th></th></tr></thead>
+              <tbody>
+                <tr><td><div class="who"><div class="av">ML</div><div><div class="nm">María López</div><div class="sb">+34 651 88 77 93</div></div></div></td><td>Boda</td><td>20 Jun · 19:00</td><td>140</td><td><span class="pill green">Confirmado</span></td><td>₲ 18.500.000</td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+                <tr><td><div class="who"><div class="av">JR</div><div><div class="nm">Julia Ramírez</div><div class="sb">+595 971 555 432</div></div></div></td><td>Quince</td><td>22 Jun · 21:00</td><td>80</td><td><span class="pill amber">Seña pagada</span></td><td>₲ 9.200.000</td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+                <tr><td><div class="who"><div class="av">CG</div><div><div class="nm">Carlos Giménez</div><div class="sb">+595 985 778 901</div></div></div></td><td>Corporativo</td><td>24 Jun · 18:30</td><td>60</td><td><span class="pill green">Confirmado</span></td><td>₲ 6.400.000</td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+                <tr><td><div class="who"><div class="av">AS</div><div><div class="nm">Andrea Silva</div><div class="sb">+595 994 112 233</div></div></div></td><td>Cumpleaños 40</td><td>25 Jun · 20:00</td><td>50</td><td><span class="pill blue">En preparación</span></td><td>₲ 4.800.000</td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+                <tr><td><div class="who"><div class="av">RM</div><div><div class="nm">Rocío Mendoza</div><div class="sb">+595 982 660 100</div></div></div></td><td>Bautizo</td><td>26 Jun · 12:00</td><td>35</td><td><span class="pill amber">Seña pagada</span></td><td>₲ 3.200.000</td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="hd"><h3>Actividad reciente</h3><span class="grow"></span><a class="link">Todo →</a></div>
+            <div class="bd activity">
+              <div class="item"><div class="dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4L12 14.01l-3-3"/></svg></div><div class="it"><div class="ti">María López confirmó su boda</div><div class="sb">Pago de saldo recibido · ₲ 12.950.000</div><div class="ts">Hace 18 min</div></div></div>
+              <div class="item"><div class="dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/></svg></div><div class="it"><div class="ti">Nueva consulta de Lucía Vera</div><div class="sb">Quince · 22 Sep · 100 invitados</div><div class="ts">Hace 1 h</div></div></div>
+              <div class="item"><div class="dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div><div class="it"><div class="ti">Stock bajo: Copa champagne</div><div class="sb">Quedan 12 unidades disponibles</div><div class="ts">Hace 3 h</div></div></div>
+              <div class="item"><div class="dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div><div class="it"><div class="ti">Andrea Silva pagó la seña</div><div class="sb">Cumpleaños 40 · ₲ 1.440.000</div><div class="ts">Ayer</div></div></div>
+              <div class="item"><div class="dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div><div class="it"><div class="ti">Subiste 8 fotos a la galería</div><div class="sb">Boda Pereira · 12 Jun</div><div class="ts">Ayer</div></div></div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- =========== EVENTOS =========== -->
+      <section class="view" id="v-eventos">
+        <div class="filters">
+          <button class="chip active">Todos <span style="opacity:.6;margin-left:4px">28</span></button>
+          <button class="chip">Pendientes <span style="opacity:.6;margin-left:4px">7</span></button>
+          <button class="chip">Confirmados <span style="opacity:.6;margin-left:4px">12</span></button>
+          <button class="chip">Realizados <span style="opacity:.6;margin-left:4px">8</span></button>
+          <button class="chip">Cancelados <span style="opacity:.6;margin-left:4px">1</span></button>
+          <span class="grow"></span>
+          <div class="field"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input placeholder="Buscar evento, cliente, fecha…"></div>
+          <button class="btn-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Exportar</button>
+        </div>
+        <div class="card">
+          <table>
+            <thead><tr><th>Cliente</th><th>Tipo</th><th>Fecha</th><th>Salón</th><th>Inv.</th><th>Estado</th><th>Seña</th><th>Total</th><th></th></tr></thead>
+            <tbody>
+              <tr><td><div class="who"><div class="av">ML</div><div><div class="nm">María López</div><div class="sb">maria.lopez@mail.com</div></div></div></td><td>Boda</td><td>20 Jun 2026 · 19:00</td><td>Casona del Lago</td><td>140</td><td><span class="pill green">Confirmado</span></td><td>30% pago</td><td>₲ 18.500.000</td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+              <tr><td><div class="who"><div class="av">JR</div><div><div class="nm">Julia Ramírez</div><div class="sb">juliarmz@mail.com</div></div></div></td><td>Quince</td><td>22 Jun 2026 · 21:00</td><td>Salón Aurora</td><td>80</td><td><span class="pill amber">Seña pagada</span></td><td>40% pago</td><td>₲ 9.200.000</td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+              <tr><td><div class="who"><div class="av">CG</div><div><div class="nm">Carlos Giménez</div><div class="sb">cgimenez@empresa.com.py</div></div></div></td><td>Corporativo</td><td>24 Jun 2026 · 18:30</td><td>Sede empresa</td><td>60</td><td><span class="pill green">Confirmado</span></td><td>100% pago</td><td>₲ 6.400.000</td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+              <tr><td><div class="who"><div class="av">AS</div><div><div class="nm">Andrea Silva</div><div class="sb">a.silva@mail.com</div></div></div></td><td>Cumpleaños 40</td><td>25 Jun 2026 · 20:00</td><td>Casa cliente</td><td>50</td><td><span class="pill blue">En preparación</span></td><td>30% pago</td><td>₲ 4.800.000</td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+              <tr><td><div class="who"><div class="av">RM</div><div><div class="nm">Rocío Mendoza</div><div class="sb">rocio.m@mail.com</div></div></div></td><td>Bautizo</td><td>26 Jun 2026 · 12:00</td><td>Quincho familiar</td><td>35</td><td><span class="pill amber">Seña pagada</span></td><td>30% pago</td><td>₲ 3.200.000</td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+              <tr><td><div class="who"><div class="av">LV</div><div><div class="nm">Lucía Vera</div><div class="sb">luvera@mail.com</div></div></div></td><td>Quince</td><td>22 Sep 2026 · 21:30</td><td>Salón La Cumbre</td><td>100</td><td><span class="pill gray">Pendiente</span></td><td>—</td><td>₲ 11.500.000</td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+              <tr><td><div class="who"><div class="av">PJ</div><div><div class="nm">Pereira / Jara</div><div class="sb">contacto@pereirajara.com</div></div></div></td><td>Boda</td><td>12 Jun 2026 · 19:30</td><td>Estancia El Carmen</td><td>180</td><td><span class="pill gray">Realizado</span></td><td>100% pago</td><td>₲ 22.700.000</td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+              <tr><td><div class="who"><div class="av">FB</div><div><div class="nm">Fernando Bareiro</div><div class="sb">fbareiro@mail.com</div></div></div></td><td>Cumpleaños infantil</td><td>5 Jun 2026 · 16:00</td><td>Quincho cliente</td><td>40</td><td><span class="pill gray">Realizado</span></td><td>100% pago</td><td>₲ 2.300.000</td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+              <tr><td><div class="who"><div class="av">VC</div><div><div class="nm">Verónica Cáceres</div><div class="sb">vcaceres@mail.com</div></div></div></td><td>Comunión</td><td>1 Jun 2026 · 13:00</td><td>Salón parroquial</td><td>60</td><td><span class="pill red">Cancelado</span></td><td>Reembolsado</td><td>—</td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =========== CALENDARIO =========== -->
+      <section class="view" id="v-calendario">
+        <div class="filters">
+          <button class="btn-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>Anterior</button>
+          <div class="field" style="font-weight:500;color:var(--text)">Junio 2026</div>
+          <button class="btn-secondary">Siguiente<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+          <span class="grow"></span>
+          <button class="chip active">Mes</button>
+          <button class="chip">Semana</button>
+          <button class="chip">Día</button>
+        </div>
+        <div class="cal">
+          <div class="card"><div class="bd">
+            <div class="cal-grid" style="margin-bottom:6px">
+              <div class="dn">Lun</div><div class="dn">Mar</div><div class="dn">Mié</div><div class="dn">Jue</div><div class="dn">Vie</div><div class="dn">Sáb</div><div class="dn">Dom</div>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+          </div></div>
+          <div class="card">
+            <div class="hd"><h3>Sábado 20 Jun</h3><span class="sub">3 eventos</span></div>
+            <div class="bd activity">
+              <div class="item"><div class="dot" style="background:linear-gradient(135deg,#C16B4F,#D9683F);color:#fff">B</div><div class="it"><div class="ti">Boda · María López</div><div class="sb">19:00 · Casona del Lago · 140 invitados</div><div class="ts" style="color:var(--green)">● Confirmado</div></div></div>
+              <div class="item"><div class="dot">M</div><div class="it"><div class="ti">Reunión con proveedor</div><div class="sb">15:00 · Catering Aurora</div><div class="ts">● Pendiente confirmación</div></div></div>
+              <div class="item"><div class="dot">E</div><div class="it"><div class="ti">Entrega de mobiliario</div><div class="sb">11:00 · Quincho Bareiro (cumpleaños infantil)</div><div class="ts" style="color:var(--green)">● Coordinado</div></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========== CLIENTES =========== -->
+      <section class="view" id="v-clientes">
+        <div class="filters">
+          <button class="chip active">Todos <span style="opacity:.6;margin-left:4px">87</span></button>
+          <button class="chip">Activos</button>
+          <button class="chip">VIP</button>
+          <button class="chip">Recurrentes</button>
+          <span class="grow"></span>
+          <div class="field"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input placeholder="Buscar cliente, email, teléfono…"></div>
+          <button class="btn-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Nuevo cliente</button>
+        </div>
+        <div class="card">
+          <table>
+            <thead><tr><th>Cliente</th><th>Teléfono</th><th>Email</th><th>Eventos</th><th>Último evento</th><th>Total facturado</th><th>Etiqueta</th><th></th></tr></thead>
+            <tbody>
+              <tr><td><div class="who"><div class="av">ML</div><div><div class="nm">María López</div><div class="sb">Cliente desde 2024</div></div></div></td><td>+34 651 88 77 93</td><td>maria.lopez@mail.com</td><td>3</td><td>20 Jun 2026 · Boda</td><td>₲ 32.400.000</td><td><span class="pill amber">VIP</span></td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+              <tr><td><div class="who"><div class="av">PJ</div><div><div class="nm">Pereira / Jara</div><div class="sb">Cliente desde 2023</div></div></div></td><td>+595 982 110 220</td><td>contacto@pereirajara.com</td><td>2</td><td>12 Jun 2026 · Boda</td><td>₲ 28.100.000</td><td><span class="pill amber">VIP</span></td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+              <tr><td><div class="who"><div class="av">JR</div><div><div class="nm">Julia Ramírez</div><div class="sb">Cliente nuevo</div></div></div></td><td>+595 971 555 432</td><td>juliarmz@mail.com</td><td>1</td><td>22 Jun 2026 · Quince</td><td>₲ 9.200.000</td><td><span class="pill green">Activo</span></td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+              <tr><td><div class="who"><div class="av">CG</div><div><div class="nm">Carlos Giménez</div><div class="sb">Recurrente</div></div></div></td><td>+595 985 778 901</td><td>cgimenez@empresa.com.py</td><td>5</td><td>24 Jun 2026 · Corporativo</td><td>₲ 24.300.000</td><td><span class="pill blue">Empresa</span></td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+              <tr><td><div class="who"><div class="av">AS</div><div><div class="nm">Andrea Silva</div><div class="sb">Cliente desde 2025</div></div></div></td><td>+595 994 112 233</td><td>a.silva@mail.com</td><td>2</td><td>25 Jun 2026 · Cumpleaños</td><td>₲ 7.100.000</td><td><span class="pill green">Activo</span></td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+              <tr><td><div class="who"><div class="av">RM</div><div><div class="nm">Rocío Mendoza</div><div class="sb">Cliente nuevo</div></div></div></td><td>+595 982 660 100</td><td>rocio.m@mail.com</td><td>1</td><td>26 Jun 2026 · Bautizo</td><td>₲ 3.200.000</td><td><span class="pill green">Activo</span></td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =========== CONSULTAS =========== -->
+      <section class="view" id="v-consultas">
+        <div class="filters">
+          <button class="chip active">Nuevas <span style="opacity:.6;margin-left:4px">4</span></button>
+          <button class="chip">Contactadas</button>
+          <button class="chip">Presupuesto enviado</button>
+          <button class="chip">Ganadas</button>
+          <button class="chip">Perdidas</button>
+          <span class="grow"></span>
+          <button class="btn-secondary">WhatsApp Business</button>
+        </div>
+        <div class="card"><div class="bd inbox">
+          <div class="msg"><div class="av">LV</div><div><div class="n">Lucía Vera · Quince — 22 Sep 2026</div><div class="s">"Hola, estoy organizando el quince de mi hija para el 22 de septiembre. Calculamos unas 100 personas. ¿Tienen disponibilidad? Me gustaría una propuesta integral con decoración y mobiliario."</div></div><div class="t">Hace 1 h</div></div>
+          <div class="msg"><div class="av">EF</div><div><div class="n">Equipo Fundación Esperanza</div><div class="s">"Buenas tardes! Estamos organizando una cena benéfica para octubre, aproximadamente 200 invitados. Necesitaríamos saber qué incluyen sus servicios corporativos y el rango de precios."</div></div><div class="t">Hace 3 h</div></div>
+          <div class="msg"><div class="av">DG</div><div><div class="n">Daniela Godoy · Cumpleaños infantil</div><div class="s">"Mi hijo cumple 5 años el 12 de julio. ¿Hacen decoración temática de dinosaurios? Serían unos 25 chicos más adultos."</div></div><div class="t">Hace 5 h</div></div>
+          <div class="msg"><div class="av">JN</div><div><div class="n">José Núñez · Civil + recepción</div><div class="s">"Hola, nos casamos por civil el 8 de agosto y queremos una recepción íntima en casa, unas 40 personas. ¿Pueden hacer el armado completo? Mesas, sillas, mantelería, decoración."</div></div><div class="t">Ayer</div></div>
+        </div></div>
+      </section>
+
+      <!-- =========== CATALOGO =========== -->
+      <section class="view" id="v-catalogo">
+        <div class="filters">
+          <span class="grow"></span>
+          <div class="field"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input placeholder="Buscar item, código…"></div>
+          <button class="btn-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Agregar item</button>
+        </div>
+        <div class="cat-tabs">
+          <button class="active">Todos · 28</button>
+          <button>Mesas · 4</button>
+          <button>Sillas · 3</button>
+          <button>Vajilla · 5</button>
+          <button>Cubiertos · 2</button>
+          <button>Cristalería · 4</button>
+          <button>Mantelería · 4</button>
+          <button>Decoración · 4</button>
+        </div>
+        <div class="grid-items">
+          <article class="gi"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></div><h4>Mesa redonda 8 pers.</h4><div class="sp">Ø150 cm · Madera</div><div class="ft"><span class="st">Stock: 12</span><span class="pr">₲ 80.000/d</span></div></article>
+          <article class="gi"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div><h4>Mesa redonda 10 pers.</h4><div class="sp">Ø180 cm · Madera</div><div class="ft"><span class="st">Stock: 8</span><span class="pr">₲ 95.000/d</span></div></article>
+          <article class="gi"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 4h10v9H7zM9 13v7M15 13v7"/></svg></div><h4>Silla Tiffany dorada</h4><div class="sp">Acrílico · resistente</div><div class="ft"><span class="st">Stock: 120</span><span class="pr">₲ 18.000/d</span></div></article>
+          <article class="gi"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="6"/></svg></div><h4>Plato base 32 cm</h4><div class="sp">Porcelana con filete dorado</div><div class="ft"><span class="st">Stock: 150</span><span class="pr">₲ 3.500/u</span></div></article>
+          <article class="gi"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 4h8l-1 8c0 2-1 3-3 3s-3-1-3-3z M12 15v6M9 21h6"/></svg></div><h4>Copa vino tinto</h4><div class="sp">450 ml · cristal</div><div class="ft"><span class="st">Stock: 200</span><span class="pr">₲ 4.500/u</span></div></article>
+          <article class="gi"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M10 3h4l-.5 12c0 1-.5 1.5-1.5 1.5s-1.5-.5-1.5-1.5z M12 16.5v4M10 20h4"/></svg></div><h4>Copa flauta champagne</h4><div class="sp">180 ml · cristal</div><div class="ft"><span class="st low">Stock: 12</span><span class="pr">₲ 5.000/u</span></div></article>
+          <article class="gi"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2v8M10 8h4M12 10v12"/></svg></div><h4>Cubiertos dorados</h4><div class="sp">Set 5 piezas · PVD</div><div class="ft"><span class="st">Stock: 80</span><span class="pr">₲ 9.000/svc</span></div></article>
+          <article class="gi"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6h16v12H4z M4 10h16"/></svg></div><h4>Mantel redondo</h4><div class="sp">Crema · 250 cm</div><div class="ft"><span class="st">Stock: 60</span><span class="pr">₲ 12.000/u</span></div></article>
+          <article class="gi"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M10 3l2 8 2-8M9 11h6l-1 10h-4z"/></svg></div><h4>Candelabro dorado 5br</h4><div class="sp">Centro de mesa</div><div class="ft"><span class="st">Stock: 25</span><span class="pr">₲ 18.000/u</span></div></article>
+        </div>
+      </section>
+
+      <!-- =========== SERVICIOS =========== -->
+      <section class="view" id="v-servicios">
+        <div class="filters">
+          <span class="grow"></span>
+          <button class="btn-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Nuevo servicio</button>
+        </div>
+        <div class="row three">
+          <div class="card">
+            <div class="hd"><h3>Organización</h3><span class="grow"></span><span class="pill green">Activo</span></div>
+            <div class="bd">
+              <p style="font-size:13.5px;color:var(--text-soft);line-height:1.6;margin-bottom:14px">Planificación integral del evento, coordinación de proveedores y asistencia el día del evento.</p>
+              <div style="font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px">Rango de precios</div>
+              <div style="font-family:'Cormorant Garamond';font-size:22px;font-weight:600;color:var(--text)">₲ 2.5M — 8M</div>
+              <div style="display:flex;gap:8px;margin-top:14px"><button class="btn-secondary" style="flex:1">Editar</button><button class="btn-secondary" style="flex:1">Ver detalle</button></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="hd"><h3>Decoración</h3><span class="grow"></span><span class="pill green">Activo</span></div>
+            <div class="bd">
+              <p style="font-size:13.5px;color:var(--text-soft);line-height:1.6;margin-bottom:14px">Ambientación completa: mesa principal, invitados, accesos, sectores temáticos y rincón fotos.</p>
+              <div style="font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px">Rango de precios</div>
+              <div style="font-family:'Cormorant Garamond';font-size:22px;font-weight:600;color:var(--text)">₲ 1.8M — 6M</div>
+              <div style="display:flex;gap:8px;margin-top:14px"><button class="btn-secondary" style="flex:1">Editar</button><button class="btn-secondary" style="flex:1">Ver detalle</button></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="hd"><h3>Alquiler mobiliario</h3><span class="grow"></span><span class="pill green">Activo</span></div>
+            <div class="bd">
+              <p style="font-size:13.5px;color:var(--text-soft);line-height:1.6;margin-bottom:14px">Mobiliario y vajilla propios. Tarifa por jornada de 24 hs. Entrega y montaje opcional.</p>
+              <div style="font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px">Items en catálogo</div>
+              <div style="font-family:'Cormorant Garamond';font-size:22px;font-weight:600;color:var(--text)">28 productos</div>
+              <div style="display:flex;gap:8px;margin-top:14px"><button class="btn-secondary" style="flex:1">Editar</button><button class="btn-secondary" style="flex:1" onclick="setView('catalogo')">Ver catálogo</button></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========== GALERIA =========== -->
+      <section class="view" id="v-galeria">
+        <div class="filters" id="gal-filters">
+          <button class="chip active" data-cat="all">Todas <span style="opacity:.6;margin-left:4px" id="gal-count-all">0</span></button>
+          <button class="chip" data-cat="boda">Bodas</button>
+          <button class="chip" data-cat="quince">Quinces</button>
+          <button class="chip" data-cat="corporativo">Corporativos</button>
+          <button class="chip" data-cat="cumple">Cumpleaños</button>
+          <span class="grow"></span>
+          <button class="btn-secondary" id="btn-upload-top"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Subir fotos</button>
+        </div>
+        <div class="card"><div class="bd">
+          <div class="gal-grid" id="gal-grid">
+            <div class="add" id="gal-add"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 5v14M5 12h14"/></svg>Subir foto</div>
+          </div>
+        </div></div>
+      </section>
+
+      <!-- =========== FINANZAS =========== -->
+      <section class="view" id="v-finanzas">
+        <div class="kpis">
+          <div class="kpi k-1"><div class="top"><span class="label">Ingresos mes</span><div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg></div></div><div class="value">₲ 48.5M</div><div class="delta up">▲ 12% <span>vs. mes anterior</span></div></div>
+          <div class="kpi k-2"><div class="top"><span class="label">Pendiente de cobro</span><div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div></div><div class="value">₲ 18.2M</div><div class="delta"><span>7 eventos próximos</span></div></div>
+          <div class="kpi k-3"><div class="top"><span class="label">Gastos</span><div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 3l-9 9-3-3-6 6"/></svg></div></div><div class="value">₲ 19.4M</div><div class="delta down">▲ 8% <span>vs. mes anterior</span></div></div>
+          <div class="kpi k-4"><div class="top"><span class="label">Ganancia neta</span><div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-7"/></svg></div></div><div class="value">₲ 29.1M</div><div class="delta up">▲ 15% <span>vs. mes anterior</span></div></div>
+        </div>
+        <div class="card">
+          <div class="hd"><h3>Movimientos</h3><span class="sub">últimos 30 días</span><span class="grow"></span><button class="btn-secondary">Exportar Excel</button></div>
+          <table>
+            <thead><tr><th>Fecha</th><th>Concepto</th><th>Cliente / Proveedor</th><th>Categoría</th><th>Método</th><th>Importe</th></tr></thead>
+            <tbody>
+              <tr><td>18 Jun</td><td>Pago de saldo · Boda María López</td><td>María López</td><td><span class="pill green">Ingreso</span></td><td>Transferencia</td><td style="color:var(--green);font-weight:600">+ ₲ 12.950.000</td></tr>
+              <tr><td>17 Jun</td><td>Compra de cristalería · 50u copas</td><td>Cristalería Asunción</td><td><span class="pill red">Gasto</span></td><td>Transferencia</td><td style="color:var(--red);font-weight:600">– ₲ 1.250.000</td></tr>
+              <tr><td>16 Jun</td><td>Seña · Cumpleaños 40 Andrea Silva</td><td>Andrea Silva</td><td><span class="pill green">Ingreso</span></td><td>Efectivo</td><td style="color:var(--green);font-weight:600">+ ₲ 1.440.000</td></tr>
+              <tr><td>15 Jun</td><td>Catering boda Pereira/Jara</td><td>Aurora Catering</td><td><span class="pill red">Gasto</span></td><td>Transferencia</td><td style="color:var(--red);font-weight:600">– ₲ 6.800.000</td></tr>
+              <tr><td>14 Jun</td><td>Pago de saldo · Boda Pereira/Jara</td><td>Pereira / Jara</td><td><span class="pill green">Ingreso</span></td><td>Transferencia</td><td style="color:var(--green);font-weight:600">+ ₲ 15.890.000</td></tr>
+              <tr><td>12 Jun</td><td>Seña · Boda María López</td><td>María López</td><td><span class="pill green">Ingreso</span></td><td>Transferencia</td><td style="color:var(--green);font-weight:600">+ ₲ 5.550.000</td></tr>
+              <tr><td>10 Jun</td><td>Mantenimiento mesas y sillas</td><td>Taller Bareiro</td><td><span class="pill red">Gasto</span></td><td>Efectivo</td><td style="color:var(--red);font-weight:600">– ₲ 850.000</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =========== REPORTES =========== -->
+      <section class="view" id="v-reportes">
+        <div class="row two" style="margin-bottom:20px">
+          <div class="card">
+            <div class="hd"><h3>Eventos por tipo</h3><span class="sub">últimos 12 meses</span></div>
+            <div class="bd">
+              <div class="chart">
+                <div class="bar"><div class="bg" style="height:85%"></div><div class="val">28</div><div class="lbl">Bodas</div></div>
+                <div class="bar"><div class="bg" style="height:62%"></div><div class="val">21</div><div class="lbl">Quinces</div></div>
+                <div class="bar"><div class="bg" style="height:48%"></div><div class="val">16</div><div class="lbl">Corp.</div></div>
+                <div class="bar"><div class="bg" style="height:55%"></div><div class="val">18</div><div class="lbl">Cumples</div></div>
+                <div class="bar"><div class="bg" style="height:32%"></div><div class="val">11</div><div class="lbl">Bautizos</div></div>
+                <div class="bar"><div class="bg" style="height:24%"></div><div class="val">8</div><div class="lbl">Otros</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="hd"><h3>Ticket promedio</h3><span class="sub">por tipo</span></div>
+            <div class="bd">
+              <div style="display:flex;flex-direction:column;gap:18px">
+                <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Bodas</span><span style="font-weight:600">₲ 19.2M</span></div><div style="height:6px;background:rgba(74,61,48,0.08);border-radius:3px;overflow:hidden"><div style="width:96%;height:100%;background:linear-gradient(90deg,var(--coral),var(--gold))"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Quinces</span><span style="font-weight:600">₲ 10.4M</span></div><div style="height:6px;background:rgba(74,61,48,0.08);border-radius:3px;overflow:hidden"><div style="width:52%;height:100%;background:linear-gradient(90deg,var(--coral),var(--gold))"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Corporativos</span><span style="font-weight:600">₲ 7.8M</span></div><div style="height:6px;background:rgba(74,61,48,0.08);border-radius:3px;overflow:hidden"><div style="width:40%;height:100%;background:linear-gradient(90deg,var(--coral),var(--gold))"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Cumpleaños</span><span style="font-weight:600">₲ 4.6M</span></div><div style="height:6px;background:rgba(74,61,48,0.08);border-radius:3px;overflow:hidden"><div style="width:24%;height:100%;background:linear-gradient(90deg,var(--coral),var(--gold))"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Bautizos / comuniones</span><span style="font-weight:600">₲ 3.1M</span></div><div style="height:6px;background:rgba(74,61,48,0.08);border-radius:3px;overflow:hidden"><div style="width:16%;height:100%;background:linear-gradient(90deg,var(--coral),var(--gold))"></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="hd"><h3>Tasa de conversión de consultas</h3><span class="sub">últimos 6 meses</span></div>
+          <div class="bd">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center">
+              <div><div style="font-family:'Cormorant Garamond';font-size:34px;font-weight:700;color:var(--text)">142</div><div style="font-size:12px;color:var(--text-muted);letter-spacing:0.14em;text-transform:uppercase;margin-top:4px">Consultas recibidas</div></div>
+              <div><div style="font-family:'Cormorant Garamond';font-size:34px;font-weight:700;color:var(--text)">98</div><div style="font-size:12px;color:var(--text-muted);letter-spacing:0.14em;text-transform:uppercase;margin-top:4px">Presupuestos enviados</div></div>
+              <div><div style="font-family:'Cormorant Garamond';font-size:34px;font-weight:700;color:var(--coral)">61</div><div style="font-size:12px;color:var(--text-muted);letter-spacing:0.14em;text-transform:uppercase;margin-top:4px">Ganadas</div></div>
+              <div><div style="font-family:'Cormorant Garamond';font-size:34px;font-weight:700;color:var(--green)">43%</div><div style="font-size:12px;color:var(--text-muted);letter-spacing:0.14em;text-transform:uppercase;margin-top:4px">Tasa conversión</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========== CONFIGURACION =========== -->
+      <section class="view" id="v-configuracion">
+        <div class="row two">
+          <div class="card">
+            <div class="hd"><h3>Perfil de la empresa</h3></div>
+            <div class="bd">
+              <div class="form-row"><div><div class="lb">Nombre comercial</div></div><input value="NCG Eventos"></div>
+              <div class="form-row"><div><div class="lb">Slogan</div><div class="hp">Aparece en el footer y meta tags</div></div><input value="Organización, decoración y alquiler para eventos especiales"></div>
+              <div class="form-row"><div><div class="lb">Teléfono / WhatsApp</div></div><input value="+34 651 88 77 93"></div>
+              <div class="form-row"><div><div class="lb">Email de contacto</div></div><input value="contacto@ncgeventos.com.py"></div>
+              <div class="form-row"><div><div class="lb">Instagram</div></div><input value="@ncgeventos"></div>
+              <div class="form-row"><div><div class="lb">Dirección depósito</div><div class="hp">Para coordinación de retiros</div></div><input value="Asunción, Paraguay"></div>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:18px">
+              <div class="hd"><h3>Notificaciones</h3></div>
+              <div class="bd">
+                <div class="form-row"><div><div class="lb">Nueva consulta</div><div class="hp">Email + WhatsApp</div></div><div class="switch on"></div></div>
+                <div class="form-row"><div><div class="lb">Pago recibido</div></div><div class="switch on"></div></div>
+                <div class="form-row"><div><div class="lb">Stock bajo</div><div class="hp">Aviso al llegar al 20%</div></div><div class="switch on"></div></div>
+                <div class="form-row"><div><div class="lb">Recordatorio de evento</div><div class="hp">48 hs antes</div></div><div class="switch on"></div></div>
+                <div class="form-row"><div><div class="lb">Reporte semanal</div></div><div class="switch"></div></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="hd"><h3>Usuarios</h3><span class="grow"></span><button class="btn-secondary">Invitar</button></div>
+              <div class="bd">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(74,61,48,0.06)"><div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--gold));display:flex;align-items:center;justify-content:center;color:#1A140E;font-weight:600;font-size:12px">AA</div><div style="flex:1"><div style="font-size:13.5px;font-weight:500">Alan Ayala</div><div style="font-size:11.5px;color:var(--text-muted)">alan.ayala@neura.com.py</div></div><span class="pill amber">Admin</span></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(74,61,48,0.06)"><div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--coral));display:flex;align-items:center;justify-content:center;color:#1A140E;font-weight:600;font-size:12px">NC</div><div style="flex:1"><div style="font-size:13.5px;font-weight:500">Natalia Cardozo</div><div style="font-size:11.5px;color:var(--text-muted)">natalia@ncgeventos.com.py</div></div><span class="pill green">Editor</span></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 0"><div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold-2),var(--coral-2));display:flex;align-items:center;justify-content:center;color:#1A140E;font-weight:600;font-size:12px">JG</div><div style="flex:1"><div style="font-size:13.5px;font-weight:500">Julián Gómez</div><div style="font-size:11.5px;color:var(--text-muted)">julian@ncgeventos.com.py</div></div><span class="pill blue">Lectura</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ============ MODAL NUEVO EVENTO ============ -->
+  <div class="backdrop" id="modal-event">
+    <div class="modal">
+      <div class="mh">
+        <h3>Nuevo evento</h3>
+        <button class="x" data-close>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form class="mb" id="form-event" onsubmit="return false">
+        <div class="grid2">
+          <label class="full"><div class="lb">Cliente</div><input id="ev-cliente" placeholder="Nombre del cliente" required></label>
+          <label><div class="lb">Teléfono</div><input id="ev-tel" placeholder="+595 9XX XXX XXX"></label>
+          <label><div class="lb">Email</div><input type="email" id="ev-email" placeholder="cliente@mail.com"></label>
+          <label><div class="lb">Tipo de evento</div>
+            <select id="ev-tipo">
+              <option>Boda</option><option>Quince</option><option>Cumpleaños</option>
+              <option>Cumpleaños infantil</option><option>Bautizo</option><option>Comunión</option>
+              <option>Corporativo</option><option>Civil</option><option>Otro</option>
+            </select>
+          </label>
+          <label><div class="lb">Cantidad de invitados</div><input type="number" id="ev-inv" placeholder="100" min="1"></label>
+          <label><div class="lb">Fecha</div><input type="date" id="ev-fecha" required></label>
+          <label><div class="lb">Hora</div><input type="time" id="ev-hora" value="20:00"></label>
+          <label class="full"><div class="lb">Salón / Ubicación</div><input id="ev-salon" placeholder="Casona del Lago, Sede empresa, Casa cliente…"></label>
+          <label><div class="lb">Presupuesto estimado (₲)</div><input type="number" id="ev-monto" placeholder="0" min="0"></label>
+          <label><div class="lb">Estado</div>
+            <select id="ev-estado">
+              <option value="pending">Pendiente</option>
+              <option value="confirmed">Confirmado</option>
+              <option value="done">Realizado</option>
+              <option value="cancelled">Cancelado</option>
+            </select>
+          </label>
+          <label class="full"><div class="lb">Notas / Detalles</div><textarea id="ev-notas" rows="3" placeholder="Detalles del evento, requisitos especiales, preferencias del cliente…"></textarea></label>
+        </div>
+      </form>
+      <div class="mf">
+        <button class="btn cancel" data-close>Cancelar</button>
+        <button class="btn save" id="ev-save">Guardar evento</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL SUBIR FOTOS ============ -->
+  <div class="backdrop" id="modal-upload">
+    <div class="modal" style="max-width:600px">
+      <div class="mh">
+        <h3>Subir fotos a la galería</h3>
+        <button class="x" data-close-upload>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="mb">
+        <label class="lb" style="font-size:12px;color:var(--text-soft);margin-bottom:5px;font-weight:500;display:block">Categoría</label>
+        <select id="up-cat" style="width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--border);background:var(--bg-card-2);font-size:13.5px;color:var(--text);font-family:inherit;margin-bottom:18px">
+          <option value="boda">Bodas</option>
+          <option value="quince">Quinces</option>
+          <option value="corporativo">Corporativos</option>
+          <option value="cumple">Cumpleaños</option>
+          <option value="otro">Otros</option>
+        </select>
+        <label class="lb" style="font-size:12px;color:var(--text-soft);margin-bottom:5px;font-weight:500;display:block">Archivos</label>
+        <div id="up-drop" style="border:2px dashed rgba(74,61,48,0.22);border-radius:12px;padding:28px;text-align:center;color:var(--text-muted);cursor:pointer;transition:border-color .2s, background .2s">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+          <div style="font-size:14px;color:var(--text);font-weight:500">Hacé click o arrastrá imágenes aquí</div>
+          <div style="font-size:12px;margin-top:4px">JPG, PNG, WEBP · hasta 10 MB cada una</div>
+        </div>
+        <input type="file" id="up-input" accept="image/*" multiple style="display:none">
+        <div id="up-preview" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:14px"></div>
+      </div>
+      <div class="mf">
+        <button class="btn cancel" data-close-upload>Cancelar</button>
+        <button class="btn save" id="up-save">Subir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TOAST ============ -->
+  <div class="toast" id="toast">
+    <span class="ic">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+    </span>
+    <span id="toast-msg">Guardado</span>
+  </div>
+
+  <script>
+    const titles = {
+      dashboard: 'Dashboard',
+      eventos: 'Eventos',
+      calendario: 'Calendario',
+      consultas: 'Consultas',
+      clientes: 'Clientes',
+      catalogo: 'Catálogo',
+      servicios: 'Servicios',
+      galeria: 'Galería',
+      finanzas: 'Finanzas',
+      reportes: 'Reportes',
+      configuracion: 'Configuración',
+    };
+
+    function setView(name) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('show'));
+      const v = document.getElementById('v-' + name);
+      if (v) v.classList.add('show');
+      document.querySelectorAll('.sidebar nav a[data-view]').forEach(a => {
+        a.classList.toggle('active', a.dataset.view === name);
+      });
+      const t = titles[name] || 'Panel';
+      document.getElementById('page-title').textContent = t;
+      if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
+    }
+
+    document.querySelectorAll('.sidebar nav a[data-view]').forEach(a => {
+      a.addEventListener('click', (e) => { e.preventDefault(); setView(a.dataset.view); });
+    });
+
+    // initial view from hash
+    const initial = (location.hash || '#dashboard').slice(1);
+    if (titles[initial]) setView(initial);
+
+    // chip toggle (local to each filters group)
+    document.querySelectorAll('.filters').forEach(group => {
+      group.addEventListener('click', e => {
+        const btn = e.target.closest('button.chip');
+        if (!btn) return;
+        group.querySelectorAll('button.chip').forEach(b => b.classList.toggle('active', b === btn));
+      });
+    });
+
+    // catalog tabs
+    document.querySelectorAll('.cat-tabs').forEach(group => {
+      group.addEventListener('click', e => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        group.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
+      });
+    });
+
+    // switches
+    document.querySelectorAll('.switch').forEach(s => s.addEventListener('click', () => s.classList.toggle('on')));
+
+    // ============ POP DROPDOWNS ============
+    function closeAllPops(except) {
+      document.querySelectorAll('.pop.open').forEach(p => { if (p !== except) p.classList.remove('open'); });
+    }
+    function togglePop(id, trigger) {
+      const p = document.getElementById(id);
+      const opening = !p.classList.contains('open');
+      closeAllPops(p);
+      p.classList.toggle('open', opening);
+    }
+    document.getElementById('btn-notif').addEventListener('click', e => { e.stopPropagation(); togglePop('pop-notif'); });
+    document.getElementById('btn-filter').addEventListener('click', e => { e.stopPropagation(); togglePop('pop-filter'); });
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.pop') && !e.target.closest('.pop-wrap')) closeAllPops();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeAllPops(); closeModal(); } });
+
+    // mark notifications as read
+    document.getElementById('mark-read').addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('#notif-list .notif.unread').forEach(n => n.classList.remove('unread'));
+      const dot = document.getElementById('notif-dot');
+      if (dot) dot.style.display = 'none';
+      toast('Notificaciones marcadas como leídas');
+    });
+
+    // ============ FILTERS DROPDOWN ============
+    document.querySelectorAll('#pop-filter .opts').forEach(grp => {
+      grp.addEventListener('click', e => {
+        const b = e.target.closest('button.opt');
+        if (!b) return;
+        grp.querySelectorAll('.opt').forEach(o => o.classList.remove('on'));
+        b.classList.add('on');
+      });
+    });
+    document.getElementById('f-clear').addEventListener('click', () => {
+      document.querySelectorAll('#pop-filter .opts').forEach(g => {
+        g.querySelectorAll('.opt').forEach(o => o.classList.remove('on'));
+        const first = g.querySelector('.opt');
+        if (first) first.classList.add('on');
+      });
+      document.getElementById('fdate-from').value = '';
+      document.getElementById('fdate-to').value = '';
+    });
+    document.getElementById('f-apply').addEventListener('click', () => {
+      const status = document.querySelector('#pop-filter .opts[data-group="status"] .opt.on')?.dataset.v || 'all';
+      const type   = document.querySelector('#pop-filter .opts[data-group="type"] .opt.on')?.dataset.v || 'all';
+      const from   = document.getElementById('fdate-from').value;
+      const to     = document.getElementById('fdate-to').value;
+      setView('eventos');
+      applyEventFilters({ status, type, from, to });
+      closeAllPops();
+    });
+
+    const statusMap = {
+      'Confirmado': 'confirmed', 'Seña pagada': 'pending', 'En preparación': 'confirmed',
+      'Pendiente': 'pending', 'Realizado': 'done', 'Cancelado': 'cancelled',
+    };
+    const typeMap = {
+      'Boda': 'boda', 'Quince': 'quince', 'Corporativo': 'corporativo',
+      'Cumpleaños': 'cumple', 'Cumpleaños 40': 'cumple', 'Cumpleaños infantil': 'cumple',
+      'Bautizo': 'otro', 'Comunión': 'otro',
+    };
+    function applyEventFilters(f) {
+      const rows = document.querySelectorAll('#v-eventos tbody tr');
+      let shown = 0;
+      rows.forEach(r => {
+        const tds = r.querySelectorAll('td');
+        const tipo = tds[1]?.textContent.trim() || '';
+        const fecha = tds[2]?.textContent.trim() || '';
+        const estadoText = tds[5]?.textContent.trim() || '';
+        const st = statusMap[estadoText] || 'pending';
+        const tp = typeMap[tipo] || 'otro';
+        let ok = true;
+        if (f.status !== 'all' && st !== f.status) ok = false;
+        if (f.type !== 'all' && tp !== f.type) ok = false;
+        // simple date parse: "20 Jun 2026 · 19:00"
+        if (ok && (f.from || f.to)) {
+          const m = fecha.match(/(\d+)\s+(\w+)\s+(\d{4})/);
+          if (m) {
+            const months = { Ene:0,Feb:1,Mar:2,Abr:3,May:4,Jun:5,Jul:6,Ago:7,Sep:8,Oct:9,Nov:10,Dic:11 };
+            const d = new Date(+m[3], months[m[2].slice(0,3)] ?? 0, +m[1]);
+            if (f.from && d < new Date(f.from)) ok = false;
+            if (f.to && d > new Date(f.to)) ok = false;
+          }
+        }
+        r.style.display = ok ? '' : 'none';
+        if (ok) shown++;
+      });
+      toast(shown + ' evento' + (shown === 1 ? '' : 's') + ' encontrado' + (shown === 1 ? '' : 's'));
+    }
+
+    // ============ MODAL NUEVO EVENTO ============
+    const modal = document.getElementById('modal-event');
+    function openModal() {
+      modal.classList.add('open');
+      document.getElementById('ev-cliente').focus();
+    }
+    function closeModal() {
+      modal.classList.remove('open');
+    }
+    document.getElementById('btn-new-event').addEventListener('click', openModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    modal.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
+
+    document.getElementById('ev-save').addEventListener('click', () => {
+      const cliente = document.getElementById('ev-cliente').value.trim();
+      const fecha   = document.getElementById('ev-fecha').value;
+      if (!cliente) { toast('Falta el nombre del cliente'); document.getElementById('ev-cliente').focus(); return; }
+      if (!fecha)   { toast('Falta la fecha del evento'); document.getElementById('ev-fecha').focus(); return; }
+
+      // build a new row in the events table
+      const tel = document.getElementById('ev-tel').value.trim() || '—';
+      const email = document.getElementById('ev-email').value.trim() || '—';
+      const tipo = document.getElementById('ev-tipo').value;
+      const inv = document.getElementById('ev-inv').value || '—';
+      const hora = document.getElementById('ev-hora').value || '—';
+      const salon = document.getElementById('ev-salon').value.trim() || '—';
+      const monto = document.getElementById('ev-monto').value;
+      const estado = document.getElementById('ev-estado').value;
+
+      const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+      const [yy,mm,dd] = fecha.split('-');
+      const fechaFmt = `${+dd} ${months[+mm-1]} ${yy} · ${hora}`;
+      const initials = cliente.split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase();
+      const pillCls = { pending:'gray', confirmed:'green', done:'gray', cancelled:'red' }[estado];
+      const pillTxt = { pending:'Pendiente', confirmed:'Confirmado', done:'Realizado', cancelled:'Cancelado' }[estado];
+      const montoFmt = monto ? '₲ ' + Number(monto).toLocaleString('es-PY') : '—';
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><div class="who"><div class="av">${initials}</div><div><div class="nm">${cliente}</div><div class="sb">${email}</div></div></div></td>
+        <td>${tipo}</td><td>${fechaFmt}</td><td>${salon}</td><td>${inv}</td>
+        <td><span class="pill ${pillCls}">${pillTxt}</span></td><td>—</td><td>${montoFmt}</td>
+        <td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>`;
+      document.querySelector('#v-eventos tbody').prepend(tr);
+
+      // reset form
+      document.getElementById('form-event').querySelectorAll('input,textarea').forEach(i => i.value = '');
+      document.getElementById('ev-hora').value = '20:00';
+
+      closeModal();
+      setView('eventos');
+      toast('Evento creado: ' + cliente);
+    });
+
+    // ============ TOAST ============
+    let toastTimer;
+    function toast(msg) {
+      const t = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+    }
+
+    // ============ GALERIA ADMIN ============
+    const galGrid = document.getElementById('gal-grid');
+    const galAdd = document.getElementById('gal-add');
+    const upModal = document.getElementById('modal-upload');
+    const upInput = document.getElementById('up-input');
+    const upDrop = document.getElementById('up-drop');
+    const upPreview = document.getElementById('up-preview');
+    const upCat = document.getElementById('up-cat');
+    const upSaveBtn = document.getElementById('up-save');
+    function setUpCount(n) {
+      upSaveBtn.textContent = 'Subir' + (n ? ' (' + n + ')' : '');
+    }
+    const catLabels = { boda:'Boda', quince:'Quince', corporativo:'Corporativo', cumple:'Cumple', otro:'Otro' };
+    let pendingFiles = [];
+
+    function updateGalCounts() {
+      const total = galGrid.querySelectorAll('.ph').length;
+      const all = document.getElementById('gal-count-all');
+      if (all) all.textContent = total;
+    }
+    updateGalCounts();
+
+    function openUpload() {
+      pendingFiles = [];
+      upPreview.innerHTML = '';
+      upInput.value = '';
+      setUpCount(0);
+      upModal.classList.add('open');
+    }
+    function closeUpload() { upModal.classList.remove('open'); }
+    galAdd.addEventListener('click', openUpload);
+    document.getElementById('btn-upload-top').addEventListener('click', openUpload);
+    upModal.addEventListener('click', e => { if (e.target === upModal) closeUpload(); });
+    upModal.querySelectorAll('[data-close-upload]').forEach(b => b.addEventListener('click', closeUpload));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && upModal.classList.contains('open')) closeUpload(); });
+
+    upDrop.addEventListener('click', () => upInput.click());
+    upDrop.addEventListener('dragover', e => { e.preventDefault(); upDrop.style.borderColor = 'var(--coral)'; upDrop.style.background = 'rgba(193,107,79,0.05)'; });
+    upDrop.addEventListener('dragleave', () => { upDrop.style.borderColor = ''; upDrop.style.background = ''; });
+    upDrop.addEventListener('drop', e => {
+      e.preventDefault();
+      upDrop.style.borderColor = ''; upDrop.style.background = '';
+      handleFiles(e.dataTransfer.files);
+    });
+    upInput.addEventListener('change', e => handleFiles(e.target.files));
+
+    function handleFiles(files) {
+      [...files].forEach(f => {
+        if (!f.type.startsWith('image/')) return;
+        if (f.size > 10 * 1024 * 1024) { toast(f.name + ' supera 10 MB'); return; }
+        pendingFiles.push(f);
+      });
+      renderPreview();
+    }
+    function renderPreview() {
+      upPreview.innerHTML = '';
+      pendingFiles.forEach((f, i) => {
+        const url = URL.createObjectURL(f);
+        const div = document.createElement('div');
+        div.style.cssText = 'position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:#eee';
+        div.innerHTML = `
+          <img src="${url}" style="width:100%;height:100%;object-fit:cover;display:block">
+          <button data-rm="${i}" title="Quitar" style="position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.55);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1">×</button>`;
+        upPreview.appendChild(div);
+      });
+      setUpCount(pendingFiles.length);
+    }
+    upPreview.addEventListener('click', e => {
+      const b = e.target.closest('button[data-rm]');
+      if (!b) return;
+      pendingFiles.splice(+b.dataset.rm, 1);
+      renderPreview();
+    });
+
+    // IndexedDB store for shared gallery photos (capacity ~GB vs ~5MB de localStorage)
+    const IDB_NAME = 'ncg';
+    const IDB_STORE = 'photos';
+    function idbOpen() {
+      return new Promise((res, rej) => {
+        const req = indexedDB.open(IDB_NAME, 1);
+        req.onupgradeneeded = e => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(IDB_STORE)) {
+            db.createObjectStore(IDB_STORE, { keyPath: 'id' });
+          }
+        };
+        req.onsuccess = e => res(e.target.result);
+        req.onerror  = e => rej(e.target.error);
+      });
+    }
+    async function idbGetAll() {
+      const db = await idbOpen();
+      return new Promise((res, rej) => {
+        const tx = db.transaction(IDB_STORE, 'readonly');
+        const req = tx.objectStore(IDB_STORE).getAll();
+        req.onsuccess = () => res(req.result || []);
+        req.onerror   = () => rej(req.error);
+      });
+    }
+    async function idbPut(entry) {
+      const db = await idbOpen();
+      return new Promise((res, rej) => {
+        const tx = db.transaction(IDB_STORE, 'readwrite');
+        const req = tx.objectStore(IDB_STORE).put(entry);
+        req.onsuccess = () => res(true);
+        req.onerror   = () => rej(req.error);
+      });
+    }
+    async function idbDelete(id) {
+      const db = await idbOpen();
+      return new Promise((res, rej) => {
+        const tx = db.transaction(IDB_STORE, 'readwrite');
+        const req = tx.objectStore(IDB_STORE).delete(id);
+        req.onsuccess = () => res(true);
+        req.onerror   = () => rej(req.error);
+      });
+    }
+    // One-time migration from old localStorage store
+    async function migrateLegacy() {
+      try {
+        const raw = localStorage.getItem('ncg_gallery_photos');
+        if (!raw) return;
+        const arr = JSON.parse(raw);
+        if (!Array.isArray(arr) || !arr.length) { localStorage.removeItem('ncg_gallery_photos'); return; }
+        for (const p of arr) {
+          if (!p.id) p.id = 'p' + Math.random().toString(36).slice(2);
+          await idbPut(p);
+        }
+        localStorage.removeItem('ncg_gallery_photos');
+      } catch {}
+    }
+    function readAsDataURL(file) {
+      return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(r.result);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+    }
+    // Compress image: max 1600px wide, JPEG q=0.82. Reduces 4MB photos to ~200-400KB.
+    async function compressImage(file, maxW = 1600, quality = 0.82) {
+      const dataUrl = await readAsDataURL(file);
+      const img = new Image();
+      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = dataUrl; });
+      const scale = Math.min(1, maxW / img.width);
+      const w = Math.round(img.width * scale);
+      const h = Math.round(img.height * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(img, 0, 0, w, h);
+      return canvas.toDataURL('image/jpeg', quality);
+    }
+    // restore existing stored photos into the admin grid on load
+    (async function restoreStored() {
+      await migrateLegacy();
+      const arr = await idbGetAll();
+      arr.forEach(p => {
+        const ph = document.createElement('div');
+        ph.className = 'ph';
+        ph.dataset.cat = p.cat;
+        ph.dataset.id = p.id;
+        ph.style.backgroundImage = `url(${p.src})`;
+        ph.style.backgroundSize = 'cover';
+        ph.style.backgroundPosition = 'center';
+        ph.innerHTML = `<span class="tg">${catLabels[p.cat] || 'Otro'}</span><span class="x">×</span>`;
+        galGrid.insertBefore(ph, galAdd.nextSibling);
+      });
+      updateGalCounts();
+    })();
+
+    document.getElementById('up-save').addEventListener('click', async () => {
+      if (!pendingFiles.length) { toast('Seleccioná al menos una imagen'); return; }
+      const cat = upCat.value;
+      const label = catLabels[cat] || 'Otro';
+      upSaveBtn.disabled = true; upSaveBtn.textContent = 'Procesando…';
+
+      let added = 0, skippedQuota = 0, errored = 0;
+      for (const f of pendingFiles) {
+        try {
+          const dataUrl = await compressImage(f);
+          const id = 'p' + Math.floor(performance.now() * 1000) + '_' + added;
+          try {
+            await idbPut({ id, src: dataUrl, cat, name: f.name, date: Date.now() });
+          } catch (e) {
+            if (e && (e.name === 'QuotaExceededError' || /quota/i.test(e.message || ''))) { skippedQuota++; continue; }
+            throw e;
+          }
+          const ph = document.createElement('div');
+          ph.className = 'ph';
+          ph.dataset.cat = cat;
+          ph.dataset.id = id;
+          ph.style.backgroundImage = `url(${dataUrl})`;
+          ph.style.backgroundSize = 'cover';
+          ph.style.backgroundPosition = 'center';
+          ph.innerHTML = `<span class="tg">${label}</span><span class="x">×</span>`;
+          galGrid.insertBefore(ph, galAdd.nextSibling);
+          added++;
+        } catch (e) { errored++; }
+      }
+
+      upSaveBtn.disabled = false;
+      setUpCount(0);
+      pendingFiles = [];
+      closeUpload();
+      updateGalCounts();
+      applyGalFilter();
+
+      if (added && !skippedQuota && !errored) toast(added + (added === 1 ? ' foto subida' : ' fotos subidas') + ' · visible en el sitio');
+      else if (added && skippedQuota) toast(added + ' subidas · ' + skippedQuota + ' sin espacio (borrá fotos viejas)');
+      else if (skippedQuota) toast('Sin espacio en almacenamiento · borrá fotos viejas');
+      else if (errored) toast('Hubo un problema procesando ' + errored + ' foto(s)');
+    });
+
+    // delete photo with × button
+    galGrid.addEventListener('click', async e => {
+      const x = e.target.closest('.x');
+      if (!x) return;
+      const ph = x.closest('.ph');
+      if (!ph) return;
+      const id = ph.dataset.id;
+      if (id) { try { await idbDelete(id); } catch {} }
+      ph.remove();
+      updateGalCounts();
+      toast('Foto eliminada');
+    });
+
+    // filter chips
+    function applyGalFilter() {
+      const active = document.querySelector('#gal-filters .chip.active');
+      const cat = active?.dataset.cat || 'all';
+      galGrid.querySelectorAll('.ph').forEach(ph => {
+        const show = cat === 'all' || ph.dataset.cat === cat;
+        ph.style.display = show ? '' : 'none';
+      });
+    }
+    document.getElementById('gal-filters').addEventListener('click', e => {
+      const b = e.target.closest('button.chip');
+      if (!b) return;
+      applyGalFilter();
+    });
+
+    // build mini calendar for current month
+    (function buildCal() {
+      const grid = document.getElementById('cal-grid');
+      if (!grid) return;
+      const today = 18; // anchored day for demo
+      const daysInMonth = 30;
+      const startWeekday = 1; // Monday-aligned start for Jun 2026 (demo)
+      const evMap = {
+        20: 'Boda · M.López',
+        22: 'Quince · J.Ramírez',
+        24: 'Corp · C.Giménez',
+        25: 'Cumple · A.Silva',
+        26: 'Bautizo · R.Mendoza',
+      };
+      // leading muted days from previous month
+      for (let i = 0; i < startWeekday; i++) {
+        const d = document.createElement('div');
+        d.className = 'dy muted';
+        d.innerHTML = '<span class="nd">' + (31 - startWeekday + 1 + i) + '</span>';
+        grid.appendChild(d);
+      }
+      for (let n = 1; n <= daysInMonth; n++) {
+        const d = document.createElement('div');
+        d.className = 'dy' + (n === today ? ' today' : '');
+        let inner = '<span class="nd">' + n + '</span>';
+        if (evMap[n]) inner += '<span class="ev">' + evMap[n] + '</span>';
+        d.innerHTML = inner;
+        grid.appendChild(d);
+      }
+      // trailing muted
+      const total = startWeekday + daysInMonth;
+      const rem = (7 - (total % 7)) % 7;
+      for (let i = 1; i <= rem; i++) {
+        const d = document.createElement('div');
+        d.className = 'dy muted';
+        d.innerHTML = '<span class="nd">' + i + '</span>';
+        grid.appendChild(d);
+      }
+    })();
+  </script>
+</body>
+</html>

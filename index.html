@@ -332,21 +332,32 @@
           update();
         }
 
+        var MAX_DOTS = 7;
         function buildDots() {
           if (!dots) return;
           var pages = maxIdx() + 1;
+          var n = Math.min(pages, MAX_DOTS);
           dots.innerHTML = '';
-          for (var i = 0; i < pages; i++) {
+          dots.style.flexWrap = 'nowrap';
+          for (var i = 0; i < n; i++) {
             var d = document.createElement('div');
             d.style.cssText = 'width:8px; height:8px; border-radius:50%; background:rgba(74,61,48,0.22); cursor:pointer; transition:background .25s, width .25s;';
-            (function (n) { d.addEventListener('click', function () { idx = n; update(); }); })(i);
+            (function (k) {
+              d.addEventListener('click', function () {
+                idx = (pages <= MAX_DOTS) ? k : Math.round(k * (pages - 1) / (MAX_DOTS - 1));
+                update();
+              });
+            })(i);
             dots.appendChild(d);
           }
         }
         function updateDots() {
           if (!dots) return;
-          for (var i = 0; i < dots.children.length; i++) {
-            var on = i === idx;
+          var pages = maxIdx() + 1;
+          var n = dots.children.length;
+          var activeDot = (pages <= MAX_DOTS) ? idx : Math.round(idx * (n - 1) / Math.max(1, pages - 1));
+          for (var i = 0; i < n; i++) {
+            var on = i === activeDot;
             dots.children[i].style.background = on ? 'linear-gradient(120deg,#C16B4F,#DAAE4E)' : 'rgba(74,61,48,0.22)';
             dots.children[i].style.width = on ? '22px' : '8px';
             dots.children[i].style.borderRadius = on ? '6px' : '50%';

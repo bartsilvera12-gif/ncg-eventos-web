@@ -994,9 +994,10 @@
           <button class="chip">Ganadas</button>
           <button class="chip">Perdidas</button>
           <span class="grow"></span>
-          <button class="btn-secondary">WhatsApp Business</button>
+          <button class="btn-secondary" id="btn-new-consulta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Nueva consulta</button>
+          <button class="btn-secondary" id="btn-wa-biz">WhatsApp Business</button>
         </div>
-        <div class="card"><div class="bd inbox">
+        <div class="card"><div class="bd inbox" id="con-inbox">
           <div class="msg"><div class="av">LV</div><div><div class="n">Lucía Vera · Quince — 22 Sep 2026</div><div class="s">"Hola, estoy organizando el quince de mi hija para el 22 de septiembre. Calculamos unas 100 personas. ¿Tienen disponibilidad? Me gustaría una propuesta integral con decoración y mobiliario."</div></div><div class="t">Hace 1 h</div></div>
           <div class="msg"><div class="av">EF</div><div><div class="n">Equipo Fundación Esperanza</div><div class="s">"Buenas tardes! Estamos organizando una cena benéfica para octubre, aproximadamente 200 invitados. Necesitaríamos saber qué incluyen sus servicios corporativos y el rango de precios."</div></div><div class="t">Hace 3 h</div></div>
           <div class="msg"><div class="av">DG</div><div><div class="n">Daniela Godoy · Cumpleaños infantil</div><div class="s">"Mi hijo cumple 5 años el 12 de julio. ¿Hacen decoración temática de dinosaurios? Serían unos 25 chicos más adultos."</div></div><div class="t">Hace 5 h</div></div>
@@ -1009,9 +1010,9 @@
         <div class="filters">
           <span class="grow"></span>
           <div class="field"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input placeholder="Buscar item, código…"></div>
-          <button class="btn-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Agregar item</button>
+          <button class="btn-secondary" id="btn-new-catalogo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Agregar item</button>
         </div>
-        <div class="cat-tabs">
+        <div class="cat-tabs" id="cat-tabs">
           <button class="active">Todos · 28</button>
           <button>Mesas · 4</button>
           <button>Sillas · 3</button>
@@ -1021,7 +1022,7 @@
           <button>Mantelería · 4</button>
           <button>Decoración · 4</button>
         </div>
-        <div class="grid-items">
+        <div class="grid-items" id="cat-grid">
           <article class="gi"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></div><h4>Mesa redonda 8 pers.</h4><div class="sp">Ø150 cm · Madera</div><div class="ft"><span class="st">Stock: 12</span><span class="pr">₲ 80.000/d</span></div></article>
           <article class="gi"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div><h4>Mesa redonda 10 pers.</h4><div class="sp">Ø180 cm · Madera</div><div class="ft"><span class="st">Stock: 8</span><span class="pr">₲ 95.000/d</span></div></article>
           <article class="gi"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 4h10v9H7zM9 13v7M15 13v7"/></svg></div><h4>Silla Tiffany dorada</h4><div class="sp">Acrílico · resistente</div><div class="ft"><span class="st">Stock: 120</span><span class="pr">₲ 18.000/d</span></div></article>
@@ -1038,9 +1039,9 @@
       <section class="view" id="v-servicios">
         <div class="filters">
           <span class="grow"></span>
-          <button class="btn-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Nuevo servicio</button>
+          <button class="btn-secondary" id="btn-new-servicio"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Nuevo servicio</button>
         </div>
-        <div class="row three">
+        <div class="row three" id="srv-grid">
           <div class="card">
             <div class="hd"><h3>Organización</h3><span class="grow"></span><span class="pill green">Activo</span></div>
             <div class="bd">
@@ -1098,10 +1099,10 @@
           <div class="kpi k-4"><div class="top"><span class="label">Ganancia neta</span><div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-7"/></svg></div></div><div class="value">₲ 29.1M</div><div class="delta up">▲ 15% <span>vs. mes anterior</span></div></div>
         </div>
         <div class="card">
-          <div class="hd"><h3>Movimientos</h3><span class="sub">últimos 30 días</span><span class="grow"></span><button class="btn-secondary" id="export-finanzas">Exportar Excel</button></div>
+          <div class="hd"><h3>Movimientos</h3><span class="sub">últimos 30 días</span><span class="grow"></span><button class="btn-secondary" id="btn-new-fin" style="margin-right:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Nuevo movimiento</button><button class="btn-secondary" id="export-finanzas">Exportar Excel</button></div>
           <table>
             <thead><tr><th>Fecha</th><th>Concepto</th><th>Cliente / Proveedor</th><th>Categoría</th><th>Método</th><th>Importe</th></tr></thead>
-            <tbody>
+            <tbody id="fin-tbody">
               <tr><td>18 Jun</td><td>Pago de saldo · Boda María López</td><td>María López</td><td><span class="pill green">Ingreso</span></td><td>Transferencia</td><td style="color:var(--green);font-weight:600">+ ₲ 12.950.000</td></tr>
               <tr><td>17 Jun</td><td>Compra de cristalería · 50u copas</td><td>Cristalería Asunción</td><td><span class="pill red">Gasto</span></td><td>Transferencia</td><td style="color:var(--red);font-weight:600">– ₲ 1.250.000</td></tr>
               <tr><td>16 Jun</td><td>Seña · Cumpleaños 40 Andrea Silva</td><td>Andrea Silva</td><td><span class="pill green">Ingreso</span></td><td>Efectivo</td><td style="color:var(--green);font-weight:600">+ ₲ 1.440.000</td></tr>
@@ -1270,6 +1271,92 @@
       <div class="mf">
         <button class="btn cancel" data-close-upload>Cancelar</button>
         <button class="btn save" id="up-save">Subir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL CATÁLOGO ============ -->
+  <div class="backdrop" id="modal-cat">
+    <div class="modal" style="max-width:520px">
+      <div class="mh"><h3 id="cat-modal-title">Agregar item</h3><button class="x" data-close-cat><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+      <div class="mb"><div class="grid2">
+        <label class="full"><div class="lb">Nombre <span style="color:var(--coral)">*</span></div><input id="cat-nombre" placeholder="Mesa redonda, Plato base…"></label>
+        <label class="full"><div class="lb">Descripción</div><input id="cat-desc" placeholder="Detalle (material, tamaño…)"></label>
+        <label><div class="lb">Categoría</div>
+          <select id="cat-cat">
+            <option value="mesas">Mesas</option><option value="sillas">Sillas</option><option value="vajilla">Vajilla</option><option value="cubiertos">Cubiertos</option><option value="cristaleria">Cristalería</option><option value="manteleria">Mantelería</option><option value="decoracion">Decoración</option>
+          </select>
+        </label>
+        <label><div class="lb">Unidad</div>
+          <select id="cat-unidad"><option value="u">u (unidad)</option><option value="d">d (por día)</option><option value="svc">svc (servicio)</option></select>
+        </label>
+        <label><div class="lb">Stock</div><input type="number" id="cat-stock" min="0" placeholder="0"></label>
+        <label><div class="lb">Precio (₲)</div><input type="number" id="cat-precio" min="0" placeholder="0"></label>
+      </div></div>
+      <div class="mf">
+        <button class="btn cancel" data-close-cat>Cancelar</button>
+        <button class="btn" id="cat-delete" style="background:#fff;color:var(--red);border:1px solid var(--red);display:none">Eliminar</button>
+        <button class="btn save" id="cat-save">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL SERVICIO ============ -->
+  <div class="backdrop" id="modal-srv">
+    <div class="modal" style="max-width:520px">
+      <div class="mh"><h3 id="srv-modal-title">Nuevo servicio</h3><button class="x" data-close-srv><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+      <div class="mb"><div class="grid2">
+        <label class="full"><div class="lb">Nombre <span style="color:var(--coral)">*</span></div><input id="srv-nombre" placeholder="Organización integral, Decoración…"></label>
+        <label class="full"><div class="lb">Descripción</div><textarea id="srv-desc" rows="3" placeholder="Qué incluye el servicio"></textarea></label>
+        <label><div class="lb">Precio base (₲)</div><input type="number" id="srv-precio" min="0" placeholder="0"></label>
+        <label><div class="lb">Unidad</div><select id="srv-unidad"><option value="svc">svc</option><option value="evento">por evento</option><option value="hora">por hora</option></select></label>
+        <label class="full"><div class="lb">Activo</div><div class="switch on" id="srv-activo"></div></label>
+      </div></div>
+      <div class="mf">
+        <button class="btn cancel" data-close-srv>Cancelar</button>
+        <button class="btn" id="srv-delete" style="background:#fff;color:var(--red);border:1px solid var(--red);display:none">Eliminar</button>
+        <button class="btn save" id="srv-save">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL CONSULTA ============ -->
+  <div class="backdrop" id="modal-con">
+    <div class="modal" style="max-width:520px">
+      <div class="mh"><h3 id="con-modal-title">Nueva consulta</h3><button class="x" data-close-con><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+      <div class="mb"><div class="grid2">
+        <label class="full"><div class="lb">Nombre <span style="color:var(--coral)">*</span></div><input id="con-nombre" placeholder="Quien consulta"></label>
+        <label><div class="lb">Contacto</div><input id="con-contacto" placeholder="Teléfono o email"></label>
+        <label><div class="lb">Tipo de evento</div><input id="con-tipo" placeholder="Boda, Quince, Corporativo…"></label>
+        <label><div class="lb">Fecha del evento</div><input type="date" id="con-fecha"></label>
+        <label><div class="lb">Estado</div><select id="con-estado"><option value="nueva">Nueva</option><option value="contactada">Contactada</option><option value="presupuesto">Presupuesto enviado</option><option value="ganada">Ganada</option><option value="perdida">Perdida</option></select></label>
+        <label class="full"><div class="lb">Notas</div><textarea id="con-notas" rows="3" placeholder="Mensaje original o detalles"></textarea></label>
+      </div></div>
+      <div class="mf">
+        <button class="btn cancel" data-close-con>Cancelar</button>
+        <button class="btn" id="con-delete" style="background:#fff;color:var(--red);border:1px solid var(--red);display:none">Eliminar</button>
+        <button class="btn save" id="con-save">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL MOVIMIENTO FINANCIERO ============ -->
+  <div class="backdrop" id="modal-fin">
+    <div class="modal" style="max-width:520px">
+      <div class="mh"><h3 id="fin-modal-title">Nuevo movimiento</h3><button class="x" data-close-fin><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+      <div class="mb"><div class="grid2">
+        <label><div class="lb">Fecha</div><input type="date" id="fin-fecha"></label>
+        <label><div class="lb">Tipo</div><select id="fin-tipo"><option value="ingreso">Ingreso</option><option value="gasto">Gasto</option></select></label>
+        <label class="full"><div class="lb">Concepto <span style="color:var(--coral)">*</span></div><input id="fin-concepto" placeholder="Seña boda, compra cristalería…"></label>
+        <label><div class="lb">Cliente / Proveedor</div><input id="fin-contraparte" placeholder="Nombre"></label>
+        <label><div class="lb">Método</div><select id="fin-metodo"><option value="">—</option><option>Transferencia</option><option>Efectivo</option><option>Tarjeta</option><option>Cheque</option></select></label>
+        <label><div class="lb">Categoría</div><input id="fin-categoria" placeholder="Eventos, Insumos, Mantenimiento…"></label>
+        <label><div class="lb">Importe (₲) <span style="color:var(--coral)">*</span></div><input type="number" id="fin-importe" min="0" placeholder="0"></label>
+      </div></div>
+      <div class="mf">
+        <button class="btn cancel" data-close-fin>Cancelar</button>
+        <button class="btn" id="fin-delete" style="background:#fff;color:var(--red);border:1px solid var(--red);display:none">Eliminar</button>
+        <button class="btn save" id="fin-save">Guardar</button>
       </div>
     </div>
   </div>
@@ -2063,10 +2150,403 @@
     window.sb.auth.onAuthStateChange((_evt, session) => { if (session) loadClients(); });
     (async () => { const { data } = await window.sb.auth.getSession(); if (data?.session) loadClients(); })();
 
+    // ============ helpers compartidos ============
+    function fmtGs(n) { return '₲ ' + Number(n || 0).toLocaleString('es-PY'); }
+    function fmtFecha(s) { if (!s) return '—'; const d = new Date(s); return d.toLocaleDateString('es-PY', { day: '2-digit', month: 'short' }); }
+    function bindCRUD(opts) {
+      // generic open/close + close-on-click-backdrop
+      const m = document.getElementById(opts.modalId);
+      if (!m) return;
+      m.querySelectorAll('[data-close-' + opts.closeAttr + ']').forEach(b => b.addEventListener('click', opts.close));
+      m.addEventListener('click', e => { if (e.target === m) opts.close(); });
+    }
+
+    // ============ CATÁLOGO CRUD ============
+    const catGrid = document.getElementById('cat-grid');
+    const catModal = document.getElementById('modal-cat');
+    let editingCatId = null;
+    let catFilter = 'all';
+    const CAT_ICON = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg>';
+    function renderCatItems(items) {
+      catGrid.innerHTML = '';
+      const list = catFilter === 'all' ? items : items.filter(i => i.categoria === catFilter);
+      if (!list.length) {
+        catGrid.innerHTML = '<div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--text-muted)">Sin items en esta categoría. Tocá "Agregar item".</div>';
+        return;
+      }
+      list.forEach(i => {
+        const art = document.createElement('article');
+        art.className = 'gi';
+        art.dataset.id = i.id;
+        art.style.cursor = 'pointer';
+        art.innerHTML = `<div class="ic">${CAT_ICON}</div><h4>${escapeHTML(i.nombre)}</h4><div class="sp">${escapeHTML(i.descripcion || '—')}</div><div class="ft"><span class="st${i.stock < 20 ? ' low' : ''}">Stock: ${i.stock}</span><span class="pr">${fmtGs(i.precio)}/${i.unidad}</span></div>`;
+        catGrid.appendChild(art);
+      });
+    }
+    async function loadCatalogo() {
+      if (!catGrid) return;
+      try {
+        const { data, error } = await window.sb.from('ncg_catalogo').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        window._catItems = data || [];
+        renderCatItems(window._catItems);
+        // update tab counts
+        const tabs = document.querySelectorAll('#cat-tabs button');
+        const cats = ['all','mesas','sillas','vajilla','cubiertos','cristaleria','manteleria','decoracion'];
+        tabs.forEach((b, i) => {
+          const c = cats[i];
+          const n = c === 'all' ? window._catItems.length : window._catItems.filter(x => x.categoria === c).length;
+          b.innerHTML = b.innerHTML.replace(/·\s*\d+/, '· ' + n);
+        });
+      } catch (e) { console.error('[NCG] cat load:', e); }
+    }
+    function openCat(item) {
+      editingCatId = item?.id || null;
+      document.getElementById('cat-modal-title').textContent = item ? 'Editar item' : 'Agregar item';
+      document.getElementById('cat-nombre').value = item?.nombre || '';
+      document.getElementById('cat-desc').value = item?.descripcion || '';
+      document.getElementById('cat-cat').value = item?.categoria || 'mesas';
+      document.getElementById('cat-unidad').value = item?.unidad || 'u';
+      document.getElementById('cat-stock').value = item?.stock ?? '';
+      document.getElementById('cat-precio').value = item?.precio ?? '';
+      document.getElementById('cat-delete').style.display = item ? 'inline-flex' : 'none';
+      catModal.classList.add('open');
+    }
+    function closeCat() { catModal.classList.remove('open'); editingCatId = null; }
+    bindCRUD({ modalId: 'modal-cat', closeAttr: 'cat', close: closeCat });
+    document.getElementById('btn-new-catalogo')?.addEventListener('click', () => openCat(null));
+    catGrid?.addEventListener('click', e => {
+      const art = e.target.closest('.gi[data-id]');
+      if (!art) return;
+      const item = (window._catItems || []).find(x => x.id === art.dataset.id);
+      if (item) openCat(item);
+    });
+    document.getElementById('cat-tabs')?.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      document.querySelectorAll('#cat-tabs button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      const txt = b.textContent.toLowerCase();
+      catFilter = txt.startsWith('todos') ? 'all'
+        : (txt.includes('mesa') ? 'mesas'
+        : (txt.includes('silla') ? 'sillas'
+        : (txt.includes('vajilla') ? 'vajilla'
+        : (txt.includes('cubier') ? 'cubiertos'
+        : (txt.includes('cristal') ? 'cristaleria'
+        : (txt.includes('mantel') ? 'manteleria'
+        : 'decoracion'))))));
+      renderCatItems(window._catItems || []);
+    });
+    document.getElementById('cat-save')?.addEventListener('click', async () => {
+      const nombre = document.getElementById('cat-nombre').value.trim();
+      if (!nombre) { toast('Falta el nombre'); return; }
+      const payload = {
+        nombre,
+        descripcion: document.getElementById('cat-desc').value.trim() || null,
+        categoria: document.getElementById('cat-cat').value,
+        unidad: document.getElementById('cat-unidad').value,
+        stock: parseInt(document.getElementById('cat-stock').value || '0', 10),
+        precio: parseFloat(document.getElementById('cat-precio').value || '0'),
+      };
+      try {
+        const op = editingCatId
+          ? window.sb.from('ncg_catalogo').update(payload).eq('id', editingCatId)
+          : window.sb.from('ncg_catalogo').insert(payload);
+        const { error } = await op;
+        if (error) throw error;
+        toast(editingCatId ? 'Item actualizado' : 'Item creado');
+        closeCat();
+        loadCatalogo();
+      } catch (e) { console.error(e); toast('No se pudo guardar'); }
+    });
+    document.getElementById('cat-delete')?.addEventListener('click', async () => {
+      if (!editingCatId || !confirm('¿Eliminar este item?')) return;
+      try {
+        const { error } = await window.sb.from('ncg_catalogo').delete().eq('id', editingCatId);
+        if (error) throw error;
+        toast('Item eliminado');
+        closeCat();
+        loadCatalogo();
+      } catch (e) { console.error(e); toast('No se pudo eliminar'); }
+    });
+
+    // ============ SERVICIOS CRUD ============
+    const srvGrid = document.getElementById('srv-grid');
+    const srvModal = document.getElementById('modal-srv');
+    let editingSrvId = null;
+    async function loadServicios() {
+      if (!srvGrid) return;
+      try {
+        const { data, error } = await window.sb.from('ncg_servicios').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        srvGrid.innerHTML = '';
+        if (!data?.length) {
+          srvGrid.innerHTML = '<div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--text-muted)">Sin servicios. Tocá "Nuevo servicio".</div>';
+          return;
+        }
+        data.forEach(s => {
+          const c = document.createElement('div');
+          c.className = 'card';
+          c.dataset.id = s.id;
+          c.innerHTML = `<div class="hd"><h3>${escapeHTML(s.nombre)}</h3><span class="grow"></span><span class="pill ${s.activo ? 'green' : 'red'}">${s.activo ? 'Activo' : 'Inactivo'}</span></div><div class="bd"><p style="font-size:13.5px;color:var(--text-soft);line-height:1.6;margin-bottom:14px">${escapeHTML(s.descripcion || '')}</p><div style="font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px">Precio base</div><div style="font-family:'Cormorant Garamond';font-size:22px;font-weight:600;color:var(--text)">${fmtGs(s.precio_base)}/${s.unidad}</div><div style="display:flex;gap:8px;margin-top:14px"><button class="btn-secondary" data-srv-edit style="flex:1">Editar</button></div></div>`;
+          srvGrid.appendChild(c);
+        });
+      } catch (e) { console.error('[NCG] srv load:', e); }
+    }
+    function openSrv(s) {
+      editingSrvId = s?.id || null;
+      document.getElementById('srv-modal-title').textContent = s ? 'Editar servicio' : 'Nuevo servicio';
+      document.getElementById('srv-nombre').value = s?.nombre || '';
+      document.getElementById('srv-desc').value = s?.descripcion || '';
+      document.getElementById('srv-precio').value = s?.precio_base ?? '';
+      document.getElementById('srv-unidad').value = s?.unidad || 'svc';
+      const sw = document.getElementById('srv-activo');
+      const active = s ? s.activo : true;
+      sw.classList.toggle('on', active);
+      document.getElementById('srv-delete').style.display = s ? 'inline-flex' : 'none';
+      srvModal.classList.add('open');
+    }
+    function closeSrv() { srvModal.classList.remove('open'); editingSrvId = null; }
+    bindCRUD({ modalId: 'modal-srv', closeAttr: 'srv', close: closeSrv });
+    document.getElementById('btn-new-servicio')?.addEventListener('click', () => openSrv(null));
+    srvGrid?.addEventListener('click', async e => {
+      const btn = e.target.closest('[data-srv-edit]');
+      if (!btn) return;
+      const id = btn.closest('[data-id]')?.dataset.id;
+      if (!id) return;
+      const { data } = await window.sb.from('ncg_servicios').select('*').eq('id', id).single();
+      if (data) openSrv(data);
+    });
+    document.getElementById('srv-save')?.addEventListener('click', async () => {
+      const nombre = document.getElementById('srv-nombre').value.trim();
+      if (!nombre) { toast('Falta el nombre'); return; }
+      const payload = {
+        nombre,
+        descripcion: document.getElementById('srv-desc').value.trim() || null,
+        precio_base: parseFloat(document.getElementById('srv-precio').value || '0'),
+        unidad: document.getElementById('srv-unidad').value,
+        activo: document.getElementById('srv-activo').classList.contains('on'),
+      };
+      try {
+        const op = editingSrvId
+          ? window.sb.from('ncg_servicios').update(payload).eq('id', editingSrvId)
+          : window.sb.from('ncg_servicios').insert(payload);
+        const { error } = await op;
+        if (error) throw error;
+        toast(editingSrvId ? 'Servicio actualizado' : 'Servicio creado');
+        closeSrv();
+        loadServicios();
+      } catch (e) { console.error(e); toast('No se pudo guardar'); }
+    });
+    document.getElementById('srv-delete')?.addEventListener('click', async () => {
+      if (!editingSrvId || !confirm('¿Eliminar este servicio?')) return;
+      try {
+        const { error } = await window.sb.from('ncg_servicios').delete().eq('id', editingSrvId);
+        if (error) throw error;
+        toast('Servicio eliminado');
+        closeSrv();
+        loadServicios();
+      } catch (e) { console.error(e); toast('No se pudo eliminar'); }
+    });
+
+    // ============ CONSULTAS CRUD ============
+    const conInbox = document.getElementById('con-inbox');
+    const conModal = document.getElementById('modal-con');
+    let editingConId = null;
+    let conFilter = 'nueva';
+    function timeAgo(iso) {
+      const d = new Date(iso);
+      const diff = (Date.now() - d.getTime()) / 1000;
+      if (diff < 3600) return 'Hace ' + Math.max(1, Math.floor(diff / 60)) + ' min';
+      if (diff < 86400) return 'Hace ' + Math.floor(diff / 3600) + ' h';
+      if (diff < 172800) return 'Ayer';
+      return d.toLocaleDateString('es-PY', { day: '2-digit', month: 'short' });
+    }
+    async function loadConsultas() {
+      if (!conInbox) return;
+      try {
+        const { data, error } = await window.sb.from('ncg_consultas').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        window._consAll = data || [];
+        renderConsultas();
+      } catch (e) { console.error('[NCG] con load:', e); }
+    }
+    function renderConsultas() {
+      const data = (window._consAll || []).filter(c => c.estado === conFilter);
+      conInbox.innerHTML = '';
+      if (!data.length) {
+        conInbox.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text-muted)">Sin consultas en este estado.</div>';
+        return;
+      }
+      data.forEach(c => {
+        const d = document.createElement('div');
+        d.className = 'msg';
+        d.dataset.id = c.id;
+        d.style.cursor = 'pointer';
+        const initials = avatarFrom(c.nombre);
+        const sub = [c.tipo_evento, c.fecha_evento ? fmtFecha(c.fecha_evento) : null].filter(Boolean).join(' — ');
+        d.innerHTML = `<div class="av">${initials}</div><div><div class="n">${escapeHTML(c.nombre)}${sub ? ' · ' + escapeHTML(sub) : ''}</div><div class="s">${escapeHTML(c.notas || '')}</div></div><div class="t">${timeAgo(c.created_at)}</div>`;
+        conInbox.appendChild(d);
+      });
+    }
+    function openCon(c) {
+      editingConId = c?.id || null;
+      document.getElementById('con-modal-title').textContent = c ? 'Editar consulta' : 'Nueva consulta';
+      document.getElementById('con-nombre').value = c?.nombre || '';
+      document.getElementById('con-contacto').value = c?.contacto || '';
+      document.getElementById('con-tipo').value = c?.tipo_evento || '';
+      document.getElementById('con-fecha').value = c?.fecha_evento || '';
+      document.getElementById('con-estado').value = c?.estado || 'nueva';
+      document.getElementById('con-notas').value = c?.notas || '';
+      document.getElementById('con-delete').style.display = c ? 'inline-flex' : 'none';
+      conModal.classList.add('open');
+    }
+    function closeCon() { conModal.classList.remove('open'); editingConId = null; }
+    bindCRUD({ modalId: 'modal-con', closeAttr: 'con', close: closeCon });
+    document.getElementById('btn-new-consulta')?.addEventListener('click', () => openCon(null));
+    document.getElementById('btn-wa-biz')?.addEventListener('click', () => { window.open('https://wa.me/34651887793', '_blank'); });
+    conInbox?.addEventListener('click', e => {
+      const msg = e.target.closest('.msg[data-id]');
+      if (!msg) return;
+      const item = (window._consAll || []).find(x => x.id === msg.dataset.id);
+      if (item) openCon(item);
+    });
+    document.querySelectorAll('#v-consultas .filters .chip').forEach((c, i) => {
+      const states = ['nueva','contactada','presupuesto','ganada','perdida'];
+      c.addEventListener('click', () => { conFilter = states[i]; renderConsultas(); });
+    });
+    document.getElementById('con-save')?.addEventListener('click', async () => {
+      const nombre = document.getElementById('con-nombre').value.trim();
+      if (!nombre) { toast('Falta el nombre'); return; }
+      const payload = {
+        nombre,
+        contacto: document.getElementById('con-contacto').value.trim() || null,
+        tipo_evento: document.getElementById('con-tipo').value.trim() || null,
+        fecha_evento: document.getElementById('con-fecha').value || null,
+        estado: document.getElementById('con-estado').value,
+        notas: document.getElementById('con-notas').value.trim() || null,
+      };
+      try {
+        const op = editingConId
+          ? window.sb.from('ncg_consultas').update(payload).eq('id', editingConId)
+          : window.sb.from('ncg_consultas').insert(payload);
+        const { error } = await op;
+        if (error) throw error;
+        toast(editingConId ? 'Consulta actualizada' : 'Consulta guardada');
+        closeCon();
+        loadConsultas();
+      } catch (e) { console.error(e); toast('No se pudo guardar'); }
+    });
+    document.getElementById('con-delete')?.addEventListener('click', async () => {
+      if (!editingConId || !confirm('¿Eliminar consulta?')) return;
+      try {
+        const { error } = await window.sb.from('ncg_consultas').delete().eq('id', editingConId);
+        if (error) throw error;
+        toast('Consulta eliminada');
+        closeCon();
+        loadConsultas();
+      } catch (e) { console.error(e); toast('No se pudo eliminar'); }
+    });
+
+    // ============ FINANZAS CRUD ============
+    const finTbody = document.getElementById('fin-tbody');
+    const finModal = document.getElementById('modal-fin');
+    let editingFinId = null;
+    async function loadFinanzas() {
+      if (!finTbody) return;
+      try {
+        const { data, error } = await window.sb.from('ncg_finanzas').select('*').order('fecha', { ascending: false });
+        if (error) throw error;
+        finTbody.innerHTML = '';
+        let ing = 0, gas = 0;
+        (data || []).forEach(m => {
+          const isIng = m.tipo === 'ingreso';
+          const importe = Number(m.importe || 0);
+          if (isIng) ing += importe; else gas += importe;
+          const tr = document.createElement('tr');
+          tr.dataset.id = m.id;
+          tr.style.cursor = 'pointer';
+          tr.innerHTML = `<td>${fmtFecha(m.fecha)}</td><td>${escapeHTML(m.concepto)}</td><td>${escapeHTML(m.contraparte || '—')}</td><td><span class="pill ${isIng ? 'green' : 'red'}">${isIng ? 'Ingreso' : 'Gasto'}</span></td><td>${escapeHTML(m.metodo || '—')}</td><td style="color:${isIng ? 'var(--green)' : 'var(--red)'};font-weight:600">${isIng ? '+ ' : '– '}${fmtGs(importe)}</td>`;
+          finTbody.appendChild(tr);
+        });
+        if (!data?.length) {
+          finTbody.innerHTML = '<tr><td colspan="6" style="padding:24px;text-align:center;color:var(--text-muted)">Sin movimientos. Tocá "Nuevo movimiento".</td></tr>';
+        }
+        // update kpis (only ingresos + gastos + neto, pendiente queda demo)
+        const kpis = document.querySelectorAll('#v-finanzas .kpi .value');
+        if (kpis[0]) kpis[0].textContent = fmtGs(ing);
+        if (kpis[2]) kpis[2].textContent = fmtGs(gas);
+        if (kpis[3]) kpis[3].textContent = fmtGs(ing - gas);
+      } catch (e) { console.error('[NCG] fin load:', e); }
+    }
+    function openFin(m) {
+      editingFinId = m?.id || null;
+      document.getElementById('fin-modal-title').textContent = m ? 'Editar movimiento' : 'Nuevo movimiento';
+      document.getElementById('fin-fecha').value = m?.fecha || new Date().toISOString().slice(0, 10);
+      document.getElementById('fin-tipo').value = m?.tipo || 'ingreso';
+      document.getElementById('fin-concepto').value = m?.concepto || '';
+      document.getElementById('fin-contraparte').value = m?.contraparte || '';
+      document.getElementById('fin-metodo').value = m?.metodo || '';
+      document.getElementById('fin-categoria').value = m?.categoria || '';
+      document.getElementById('fin-importe').value = m?.importe ?? '';
+      document.getElementById('fin-delete').style.display = m ? 'inline-flex' : 'none';
+      finModal.classList.add('open');
+    }
+    function closeFin() { finModal.classList.remove('open'); editingFinId = null; }
+    bindCRUD({ modalId: 'modal-fin', closeAttr: 'fin', close: closeFin });
+    document.getElementById('btn-new-fin')?.addEventListener('click', () => openFin(null));
+    finTbody?.addEventListener('click', async e => {
+      const tr = e.target.closest('tr[data-id]');
+      if (!tr) return;
+      const { data } = await window.sb.from('ncg_finanzas').select('*').eq('id', tr.dataset.id).single();
+      if (data) openFin(data);
+    });
+    document.getElementById('fin-save')?.addEventListener('click', async () => {
+      const concepto = document.getElementById('fin-concepto').value.trim();
+      const importe = parseFloat(document.getElementById('fin-importe').value || '0');
+      if (!concepto) { toast('Falta el concepto'); return; }
+      if (!importe || importe <= 0) { toast('Falta el importe'); return; }
+      const payload = {
+        fecha: document.getElementById('fin-fecha').value || new Date().toISOString().slice(0, 10),
+        tipo: document.getElementById('fin-tipo').value,
+        concepto,
+        contraparte: document.getElementById('fin-contraparte').value.trim() || null,
+        metodo: document.getElementById('fin-metodo').value || null,
+        categoria: document.getElementById('fin-categoria').value.trim() || null,
+        importe,
+      };
+      try {
+        const op = editingFinId
+          ? window.sb.from('ncg_finanzas').update(payload).eq('id', editingFinId)
+          : window.sb.from('ncg_finanzas').insert(payload);
+        const { error } = await op;
+        if (error) throw error;
+        toast(editingFinId ? 'Movimiento actualizado' : 'Movimiento creado');
+        closeFin();
+        loadFinanzas();
+      } catch (e) { console.error(e); toast('No se pudo guardar'); }
+    });
+    document.getElementById('fin-delete')?.addEventListener('click', async () => {
+      if (!editingFinId || !confirm('¿Eliminar movimiento?')) return;
+      try {
+        const { error } = await window.sb.from('ncg_finanzas').delete().eq('id', editingFinId);
+        if (error) throw error;
+        toast('Movimiento eliminado');
+        closeFin();
+        loadFinanzas();
+      } catch (e) { console.error(e); toast('No se pudo eliminar'); }
+    });
+
+    // ============ Carga inicial post-login para todos los CRUD ============
+    async function loadAllAfterAuth() {
+      await Promise.all([loadCatalogo(), loadServicios(), loadConsultas(), loadFinanzas()]);
+    }
+    window.sb.auth.onAuthStateChange((_evt, session) => { if (session) loadAllAfterAuth(); });
+    (async () => { const { data } = await window.sb.auth.getSession(); if (data?.session) loadAllAfterAuth(); })();
+
     // ============ STUB: botones que aún no tienen backend ============
     // Match any unhandled .btn-secondary in main views by text content
     (function () {
-      const stubLabels = ['Nuevo servicio','Agregar item','Invitar','WhatsApp Business','Editar','Ver detalle'];
+      const stubLabels = ['Invitar'];
       document.querySelectorAll('.main .btn-secondary, .main .action').forEach(btn => {
         const txt = (btn.innerText || '').trim();
         const isStub = stubLabels.some(s => txt === s) || btn.classList.contains('action');

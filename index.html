@@ -257,7 +257,21 @@
       else setTimeout(init, 250);
     })();
   </script>
-  <style>a[href*="wa.me"][style*="position:fixed"]{display:none!important}</style>
+  <style>a[href*="wa.me"][style*="position:fixed"],a[href*="wa.me"][style*="position: fixed"]{display:none!important}</style>
+  <script>
+    // Belt + braces: remove the floating WhatsApp button after the bundler renders
+    (function () {
+      function killFloatingWA() {
+        document.querySelectorAll('a[href*="wa.me"]').forEach(function (a) {
+          if (getComputedStyle(a).position === 'fixed') a.remove();
+        });
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', killFloatingWA);
+      else killFloatingWA();
+      setTimeout(killFloatingWA, 600);
+      setTimeout(killFloatingWA, 1500);
+    })();
+  </script>
   <noscript>
     <style>#__bundler_loading { display: none; }</style>
     <div style="position:fixed;bottom:12px;left:12px;font:13px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;color:#999;background:rgba(255,255,255,0.9);padding:6px 12px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,0.08);z-index:10000;">

@@ -257,7 +257,7 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900},&quot;whatsappNumber&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;595981123456&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;whatsappMessage&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Hola NCG Eventos, me gustaría consultar disponibilidad y un presupuesto para mi evento.&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900},&quot;whatsappNumber&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;34651887793&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;whatsappMessage&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Hola NCG Eventos, me gustaría consultar disponibilidad y un presupuesto para mi evento.&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
 class Component extends DCLogic {
   state = { filter: 'Todos' };
 
@@ -289,7 +289,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const number = (this.props.whatsappNumber ?? '595981123456').replace(/[^0-9]/g, '');
+    const number = (this.props.whatsappNumber ?? '34651887793').replace(/[^0-9]/g, '');
     const msg = this.props.whatsappMessage ?? 'Hola NCG Eventos, me gustaría consultar disponibilidad y un presupuesto para mi evento.';
     const waHref = `https://wa.me/${number}?text=${encodeURIComponent(msg)}`;
 

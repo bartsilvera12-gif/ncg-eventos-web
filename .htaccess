@@ -1,0 +1,10 @@
+RewriteEngine On
+
+# Pretty URLs: /admin → /admin.html (only when no real file/dir matches)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^.]+)$ $1.html [NC,L]
+
+# Redirect /admin.html → /admin (canonical, no trailing .html in address bar)
+RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]
+RewriteRule ^ /%1 [R=301,L]

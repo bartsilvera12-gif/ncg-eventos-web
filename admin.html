@@ -757,9 +757,10 @@
             <div class="opts" data-group="type">
               <button class="opt on" data-v="all">Todos</button>
               <button class="opt" data-v="boda">Bodas</button>
-              <button class="opt" data-v="quince">Quinces</button>
+              <button class="opt" data-v="quince">Quinceaños</button>
               <button class="opt" data-v="corporativo">Corporativos</button>
               <button class="opt" data-v="cumple">Cumpleaños</button>
+              <button class="opt" data-v="cumple_inf">Cumpleaños infantil</button>
               <button class="opt" data-v="otro">Otros</button>
             </div>
             <div class="ttl">Rango de fechas</div>
@@ -1077,9 +1078,10 @@
         <div class="filters" id="gal-filters">
           <button class="chip active" data-cat="all">Todas <span style="opacity:.6;margin-left:4px" id="gal-count-all">0</span></button>
           <button class="chip" data-cat="boda">Bodas</button>
-          <button class="chip" data-cat="quince">Quinces</button>
+          <button class="chip" data-cat="quince">Quinceaños</button>
           <button class="chip" data-cat="corporativo">Corporativos</button>
           <button class="chip" data-cat="cumple">Cumpleaños</button>
+          <button class="chip" data-cat="cumple_inf">Cumpleaños infantil</button>
           <span class="grow"></span>
           <button class="btn-secondary" id="btn-upload-top"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Subir fotos</button>
         </div>
@@ -1254,9 +1256,10 @@
         <label class="lb" style="font-size:12px;color:var(--text-soft);margin-bottom:5px;font-weight:500;display:block">Categoría</label>
         <select id="up-cat" style="width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--border);background:var(--bg-card-2);font-size:13.5px;color:var(--text);font-family:inherit;margin-bottom:18px">
           <option value="boda">Bodas</option>
-          <option value="quince">Quinces</option>
+          <option value="quince">Quinceaños</option>
           <option value="corporativo">Corporativos</option>
           <option value="cumple">Cumpleaños</option>
+          <option value="cumple_inf">Cumpleaños infantil</option>
           <option value="otro">Otros</option>
         </select>
         <label class="lb" style="font-size:12px;color:var(--text-soft);margin-bottom:5px;font-weight:500;display:block">Archivos</label>
@@ -1696,7 +1699,7 @@
     function setUpCount(n) {
       upSaveBtn.textContent = 'Subir' + (n ? ' (' + n + ')' : '');
     }
-    const catLabels = { boda:'Boda', quince:'Quince', corporativo:'Corporativo', cumple:'Cumple', otro:'Otro' };
+    const catLabels = { boda:'Boda', quince:'Quinceaños', corporativo:'Corporativo', cumple:'Cumpleaños', cumple_inf:'Cumpleaños infantil', otro:'Otro' };
     let pendingFiles = [];
 
     function updateGalCounts() {

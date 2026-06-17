@@ -402,9 +402,10 @@
     <div class="filters" id="filters">
       <button class="active" data-filter="all">Todos</button>
       <button data-filter="bodas">Bodas</button>
-      <button data-filter="quinces">Quinces</button>
+      <button data-filter="quinces">Quinceaños</button>
       <button data-filter="corporativo">Corporativos</button>
       <button data-filter="cumple">Cumpleaños</button>
+      <button data-filter="cumple_inf">Cumpleaños infantil</button>
       <button data-filter="otros">Otros</button>
     </div>
   </div>
@@ -454,10 +455,10 @@
       <path d="M3 17l5-5 4 4 3-3 6 6"/>
     </svg>`;
 
-    const LABEL = { bodas:'Boda', quinces:'Quince', corporativo:'Corporativo', cumple:'Cumpleaños', otros:'Otros' };
+    const LABEL = { bodas:'Boda', quinces:'Quinceaños', corporativo:'Corporativo', cumple:'Cumpleaños', cumple_inf:'Cumpleaños infantil', otros:'Otros' };
 
     // Photos uploaded via admin panel (IndexedDB). Map admin cats → gallery cats.
-    const ADMIN_CAT_MAP = { boda: 'bodas', quince: 'quinces', corporativo: 'corporativo', cumple: 'cumple', otro: 'otros' };
+    const ADMIN_CAT_MAP = { boda: 'bodas', quince: 'quinces', corporativo: 'corporativo', cumple: 'cumple', cumple_inf: 'cumple_inf', otro: 'otros' };
     const grid = document.getElementById('grid');
 
     let ALL_PHOTOS = []; // tracked for lightbox

@@ -1943,8 +1943,9 @@
       closeCatPop();
       if (newCat === oldCat) return;
       try {
-        const { error } = await window.sb.from(window.NCG.TABLE).update({ cat: newCat }).eq('id', id);
+        const { data, error } = await window.sb.from(window.NCG.TABLE).update({ cat: newCat }).eq('id', id).select('id');
         if (error) throw error;
+        if (!data || !data.length) throw new Error('Sin permisos para actualizar (falta policy UPDATE en RLS)');
         ph.dataset.cat = newCat;
         const tg = ph.querySelector('.tg');
         if (tg) tg.textContent = catLabels[newCat] || 'Otro';
@@ -1953,7 +1954,7 @@
         toast('Categoría actualizada');
       } catch (err) {
         console.error('[NCG] cat update:', err);
-        toast('No se pudo actualizar');
+        toast('No se pudo actualizar: ' + (err.message || ''));
       }
     });
     document.addEventListener('click', e => {

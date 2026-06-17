@@ -968,12 +968,12 @@
           <button class="chip">Recurrentes</button>
           <span class="grow"></span>
           <div class="field"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input placeholder="Buscar cliente, email, teléfono…"></div>
-          <button class="btn-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Nuevo cliente</button>
+          <button class="btn-secondary" id="btn-new-client"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Nuevo cliente</button>
         </div>
         <div class="card">
           <table>
-            <thead><tr><th>Cliente</th><th>Teléfono</th><th>Email</th><th>Eventos</th><th>Último evento</th><th>Total facturado</th><th>Etiqueta</th><th></th></tr></thead>
-            <tbody>
+            <thead><tr><th>Cliente</th><th>Teléfono</th><th>Email</th><th>Tipo</th><th>Etiqueta</th><th></th></tr></thead>
+            <tbody id="cli-tbody">
               <tr><td><div class="who"><div class="av">ML</div><div><div class="nm">María López</div><div class="sb">Cliente desde 2024</div></div></div></td><td>+34 651 88 77 93</td><td>maria.lopez@mail.com</td><td>3</td><td>20 Jun 2026 · Boda</td><td>₲ 32.400.000</td><td><span class="pill amber">VIP</span></td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
               <tr><td><div class="who"><div class="av">PJ</div><div><div class="nm">Pereira / Jara</div><div class="sb">Cliente desde 2023</div></div></div></td><td>+595 982 110 220</td><td>contacto@pereirajara.com</td><td>2</td><td>12 Jun 2026 · Boda</td><td>₲ 28.100.000</td><td><span class="pill amber">VIP</span></td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
               <tr><td><div class="who"><div class="av">JR</div><div><div class="nm">Julia Ramírez</div><div class="sb">Cliente nuevo</div></div></div></td><td>+595 971 555 432</td><td>juliarmz@mail.com</td><td>1</td><td>22 Jun 2026 · Quince</td><td>₲ 9.200.000</td><td><span class="pill green">Activo</span></td><td><button class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td></tr>
@@ -1270,6 +1270,44 @@
       <div class="mf">
         <button class="btn cancel" data-close-upload>Cancelar</button>
         <button class="btn save" id="up-save">Subir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL NUEVO/EDITAR CLIENTE ============ -->
+  <div class="backdrop" id="modal-client">
+    <div class="modal" style="max-width:520px">
+      <div class="mh">
+        <h3 id="cli-modal-title">Nuevo cliente</h3>
+        <button class="x" data-close-cli>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="mb">
+        <div class="grid2">
+          <label class="full"><div class="lb">Nombre <span style="color:var(--coral)">*</span></div><input id="cli-nombre" placeholder="Nombre y apellido"></label>
+          <label><div class="lb">Teléfono</div><input id="cli-telefono" placeholder="+595 9XX XXX XXX"></label>
+          <label><div class="lb">Email</div><input id="cli-email" type="email" placeholder="cliente@mail.com"></label>
+          <label><div class="lb">Tipo</div>
+            <select id="cli-tipo">
+              <option value="">—</option>
+              <option value="particular">Particular</option>
+              <option value="empresa">Empresa</option>
+            </select>
+          </label>
+          <label><div class="lb">Etiqueta</div>
+            <select id="cli-etiqueta">
+              <option value="activo">Activo</option>
+              <option value="vip">VIP</option>
+              <option value="recurrente">Recurrente</option>
+            </select>
+          </label>
+          <label class="full"><div class="lb">Notas</div><textarea id="cli-notas" rows="3" placeholder="Observaciones, alergias, contactos secundarios…"></textarea></label>
+        </div>
+      </div>
+      <div class="mf">
+        <button class="btn cancel" data-close-cli>Cancelar</button>
+        <button class="btn save" id="cli-save">Guardar</button>
       </div>
     </div>
   </div>
@@ -1909,16 +1947,133 @@
       toast('Exportado · revisá tu carpeta de descargas');
     });
 
+    // ============ CLIENTES CRUD ============
+    const cliModal = document.getElementById('modal-client');
+    const cliTbody = document.getElementById('cli-tbody');
+    const cliSaveBtn = document.getElementById('cli-save');
+    const cliTitle = document.getElementById('cli-modal-title');
+    let editingClientId = null;
+
+    function avatarFrom(name) {
+      const parts = (name || '?').trim().split(/\s+/);
+      return ((parts[0]?.[0] || '?') + (parts[1]?.[0] || '')).toUpperCase().slice(0, 2);
+    }
+    function pillFor(etiqueta) {
+      const cls = etiqueta === 'vip' ? 'amber' : (etiqueta === 'recurrente' ? 'blue' : 'green');
+      const label = etiqueta === 'vip' ? 'VIP' : (etiqueta === 'recurrente' ? 'Recurrente' : 'Activo');
+      return `<span class="pill ${cls}">${label}</span>`;
+    }
+    function clientRow(c) {
+      const tr = document.createElement('tr');
+      tr.dataset.id = c.id;
+      tr.innerHTML = `
+        <td><div class="who"><div class="av">${avatarFrom(c.nombre)}</div><div><div class="nm">${escapeHTML(c.nombre)}</div><div class="sb">${c.tipo ? (c.tipo[0].toUpperCase() + c.tipo.slice(1)) : 'Cliente'}</div></div></div></td>
+        <td>${escapeHTML(c.telefono || '—')}</td>
+        <td>${escapeHTML(c.email || '—')}</td>
+        <td>${c.tipo ? (c.tipo[0].toUpperCase() + c.tipo.slice(1)) : '—'}</td>
+        <td>${pillFor(c.etiqueta || 'activo')}</td>
+        <td><button class="action" data-cli-edit><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>`;
+      return tr;
+    }
+    function escapeHTML(s) {
+      return String(s ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    }
+    async function loadClients() {
+      if (!cliTbody) return;
+      cliTbody.innerHTML = '<tr><td colspan="6" style="padding:18px;text-align:center;color:var(--text-muted)">Cargando…</td></tr>';
+      try {
+        const { data, error } = await window.sb
+          .from('ncg_clientes')
+          .select('id, nombre, email, telefono, tipo, vip, notas, created_at')
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        cliTbody.innerHTML = '';
+        if (!data?.length) {
+          cliTbody.innerHTML = '<tr><td colspan="6" style="padding:24px;text-align:center;color:var(--text-muted)">Todavía no hay clientes. Tocá "Nuevo cliente" para crear el primero.</td></tr>';
+          return;
+        }
+        data.forEach(c => {
+          c.etiqueta = c.vip ? 'vip' : 'activo';
+          cliTbody.appendChild(clientRow(c));
+        });
+      } catch (e) {
+        console.error('[NCG] clientes load:', e);
+        cliTbody.innerHTML = '<tr><td colspan="6" style="padding:18px;text-align:center;color:var(--red)">Error cargando clientes</td></tr>';
+      }
+    }
+    function openClient(c) {
+      editingClientId = c?.id || null;
+      cliTitle.textContent = c ? 'Editar cliente' : 'Nuevo cliente';
+      document.getElementById('cli-nombre').value = c?.nombre || '';
+      document.getElementById('cli-telefono').value = c?.telefono || '';
+      document.getElementById('cli-email').value = c?.email || '';
+      document.getElementById('cli-tipo').value = c?.tipo || '';
+      document.getElementById('cli-etiqueta').value = c?.vip ? 'vip' : 'activo';
+      document.getElementById('cli-notas').value = c?.notas || '';
+      cliModal.classList.add('open');
+    }
+    function closeClient() { cliModal.classList.remove('open'); editingClientId = null; }
+    document.getElementById('btn-new-client')?.addEventListener('click', () => openClient(null));
+    cliModal.querySelectorAll('[data-close-cli]').forEach(b => b.addEventListener('click', closeClient));
+    cliModal.addEventListener('click', e => { if (e.target === cliModal) closeClient(); });
+    cliSaveBtn?.addEventListener('click', async () => {
+      const nombre = document.getElementById('cli-nombre').value.trim();
+      if (!nombre) { toast('Falta el nombre'); document.getElementById('cli-nombre').focus(); return; }
+      const payload = {
+        nombre,
+        telefono: document.getElementById('cli-telefono').value.trim() || null,
+        email: document.getElementById('cli-email').value.trim() || null,
+        tipo: document.getElementById('cli-tipo').value || null,
+        vip: document.getElementById('cli-etiqueta').value === 'vip',
+        notas: document.getElementById('cli-notas').value.trim() || null,
+        updated_at: new Date().toISOString(),
+      };
+      cliSaveBtn.disabled = true; cliSaveBtn.textContent = 'Guardando…';
+      try {
+        if (editingClientId) {
+          const { error } = await window.sb.from('ncg_clientes').update(payload).eq('id', editingClientId);
+          if (error) throw error;
+          toast('Cliente actualizado');
+        } else {
+          const { error } = await window.sb.from('ncg_clientes').insert(payload);
+          if (error) throw error;
+          toast('Cliente creado');
+        }
+        closeClient();
+        loadClients();
+      } catch (e) {
+        console.error('[NCG] cli save:', e);
+        toast('No se pudo guardar');
+      } finally {
+        cliSaveBtn.disabled = false; cliSaveBtn.textContent = 'Guardar';
+      }
+    });
+    // Row action: edit (and delete via confirm)
+    cliTbody?.addEventListener('click', async e => {
+      const btn = e.target.closest('[data-cli-edit]');
+      if (!btn) return;
+      const tr = btn.closest('tr');
+      const id = tr?.dataset.id;
+      if (!id) return;
+      const { data } = await window.sb.from('ncg_clientes').select('*').eq('id', id).single();
+      if (!data) { toast('No encontrado'); return; }
+      openClient(data);
+    });
+    // Initial load after auth
+    window.sb.auth.onAuthStateChange((_evt, session) => { if (session) loadClients(); });
+    (async () => { const { data } = await window.sb.auth.getSession(); if (data?.session) loadClients(); })();
+
     // ============ STUB: botones que aún no tienen backend ============
     // Match any unhandled .btn-secondary in main views by text content
     (function () {
-      const stubLabels = ['Nuevo cliente','Nuevo servicio','Agregar item','Invitar','WhatsApp Business','Editar','Ver detalle'];
+      const stubLabels = ['Nuevo servicio','Agregar item','Invitar','WhatsApp Business','Editar','Ver detalle'];
       document.querySelectorAll('.main .btn-secondary, .main .action').forEach(btn => {
         const txt = (btn.innerText || '').trim();
         const isStub = stubLabels.some(s => txt === s) || btn.classList.contains('action');
         if (!isStub) return;
         // skip ones we already wired
-        if (btn.id && ['export-eventos','export-finanzas','cal-prev','cal-next','btn-upload-top','btn-new-event'].includes(btn.id)) return;
+        if (btn.id && ['export-eventos','export-finanzas','cal-prev','cal-next','btn-upload-top','btn-new-event','btn-new-client'].includes(btn.id)) return;
+        if (btn.closest('#cli-tbody')) return;
         btn.addEventListener('click', e => {
           e.preventDefault();
           const label = txt || 'Acción';

@@ -421,8 +421,14 @@
     .gal-grid .ph.k { background: linear-gradient(135deg, var(--gold), var(--coral-2)); }
     .gal-grid .ph:hover { transform: scale(1.02); }
     .gal-grid .ph .tg { position: absolute; top: 8px; left: 8px; font-size: 10.5px; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,0.85); color: var(--text); font-weight: 500; }
-    .gal-grid .ph .x { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; border-radius: 50%; background: rgba(0,0,0,0.45); color: #fff; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .2s; }
-    .gal-grid .ph:hover .x { opacity: 1; }
+    .gal-grid .ph .x { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; border-radius: 50%; background: rgba(0,0,0,0.45); color: #fff; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .2s; cursor: pointer; }
+    .gal-grid .ph .ed { position: absolute; top: 8px; right: 38px; width: 24px; height: 24px; border-radius: 50%; background: rgba(0,0,0,0.45); color: #fff; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .2s; cursor: pointer; font-size: 13px; line-height: 1; }
+    .gal-grid .ph:hover .x, .gal-grid .ph:hover .ed { opacity: 1; }
+    .cat-pop { position: absolute; z-index: 130; background: #FFFFFF; border-radius: 10px; box-shadow: 0 16px 40px -10px rgba(0,0,0,0.45); padding: 6px; display: none; min-width: 180px; font-family: 'Inter', sans-serif; }
+    .cat-pop.open { display: block; }
+    .cat-pop button { display: flex; align-items: center; gap: 8px; width: 100%; padding: 9px 11px; border: none; background: transparent; border-radius: 7px; color: var(--text); font-size: 13px; font-weight: 500; cursor: pointer; text-align: left; }
+    .cat-pop button:hover { background: rgba(193,107,79,0.08); }
+    .cat-pop button.current { background: rgba(218,174,78,0.18); }
     .gal-grid .add {
       aspect-ratio: 1; border-radius: 10px;
       border: 2px dashed rgba(74,61,48,0.2); background: var(--bg-card-2);
@@ -1798,7 +1804,7 @@
           ph.style.backgroundImage = `url(${window.NCG.publicUrl(p.path)})`;
           ph.style.backgroundSize = 'cover';
           ph.style.backgroundPosition = 'center';
-          ph.innerHTML = `<span class="tg">${catLabels[p.cat] || 'Otro'}</span><span class="x">×</span>`;
+          ph.innerHTML = `<span class="tg">${catLabels[p.cat] || 'Otro'}</span><span class="ed" title="Cambiar categoría">✎</span><span class="x">×</span>`;
           galGrid.insertBefore(ph, galAdd.nextSibling);
         });
         updateGalCounts();
@@ -1853,7 +1859,7 @@
           ph.style.backgroundImage = `url(${window.NCG.publicUrl(row.path)})`;
           ph.style.backgroundSize = 'cover';
           ph.style.backgroundPosition = 'center';
-          ph.innerHTML = `<span class="tg">${label}</span><span class="x">×</span>`;
+          ph.innerHTML = `<span class="tg">${label}</span><span class="ed" title="Cambiar categoría">✎</span><span class="x">×</span>`;
           galGrid.insertBefore(ph, galAdd.nextSibling);
           added++;
         } catch (e) {
@@ -1895,6 +1901,63 @@
       ph.remove();
       updateGalCounts();
       toast('Foto eliminada');
+    });
+
+    // change category with ✎ button
+    const catPop = document.createElement('div');
+    catPop.className = 'cat-pop';
+    document.body.appendChild(catPop);
+    let catPopTarget = null;
+    function buildCatPop(currentCat) {
+      catPop.innerHTML = Object.entries(catLabels).map(([k, lbl]) =>
+        `<button data-v="${k}" class="${k === currentCat ? 'current' : ''}">${lbl}</button>`
+      ).join('');
+    }
+    function showCatPop(near, currentCat) {
+      buildCatPop(currentCat);
+      catPop.classList.add('open');
+      const r = near.getBoundingClientRect();
+      const w = 200;
+      catPop.style.width = w + 'px';
+      const left = Math.min(r.left + window.scrollX, window.scrollX + document.documentElement.clientWidth - w - 12);
+      catPop.style.left = left + 'px';
+      catPop.style.top = (r.bottom + window.scrollY + 6) + 'px';
+    }
+    function closeCatPop() { catPop.classList.remove('open'); catPopTarget = null; }
+    galGrid.addEventListener('click', e => {
+      const ed = e.target.closest('.ed');
+      if (!ed) return;
+      e.stopPropagation();
+      const ph = ed.closest('.ph');
+      if (!ph) return;
+      catPopTarget = ph;
+      showCatPop(ed, ph.dataset.cat);
+    });
+    catPop.addEventListener('click', async e => {
+      const btn = e.target.closest('button[data-v]');
+      if (!btn || !catPopTarget) return;
+      const newCat = btn.dataset.v;
+      const ph = catPopTarget;
+      const id = ph.dataset.id;
+      const oldCat = ph.dataset.cat;
+      closeCatPop();
+      if (newCat === oldCat) return;
+      try {
+        const { error } = await window.sb.from(window.NCG.TABLE).update({ cat: newCat }).eq('id', id);
+        if (error) throw error;
+        ph.dataset.cat = newCat;
+        const tg = ph.querySelector('.tg');
+        if (tg) tg.textContent = catLabels[newCat] || 'Otro';
+        updateGalCounts();
+        applyGalFilter();
+        toast('Categoría actualizada');
+      } catch (err) {
+        console.error('[NCG] cat update:', err);
+        toast('No se pudo actualizar');
+      }
+    });
+    document.addEventListener('click', e => {
+      if (catPop.classList.contains('open') && !catPop.contains(e.target) && !e.target.closest('.ed')) closeCatPop();
     });
 
     // filter chips

@@ -331,7 +331,7 @@
         function update() {
           var w = slideWidth();
           // apply width to every slide
-          [].forEach.call(row.children, function (s) { s.style.flex = '0 0 ' + w + 'px'; s.style.width = w + 'px'; s.style.height = (w * 1.28) + 'px'; });
+          [].forEach.call(row.children, function (s) { s.style.flex = '0 0 ' + w + 'px'; s.style.width = w + 'px'; s.style.height = (w * 1.1) + 'px'; });
           row.style.transform = 'translateX(' + (-idx * (w + GAP)) + 'px)';
           if (prev) prev.toggleAttribute('disabled', idx <= 0);
           if (next) next.toggleAttribute('disabled', idx >= maxIdx());
@@ -400,7 +400,7 @@
         // Responsive: change VISIBLE on mobile
         function setVisible() {
           var w = window.innerWidth;
-          var v = w < 560 ? 1 : 2;
+          var v = w < 560 ? 1 : (w < 900 ? 2 : 3);
           if (v !== VISIBLE) { VISIBLE = v; idx = Math.min(idx, maxIdx()); buildDots(); }
           update();
         }

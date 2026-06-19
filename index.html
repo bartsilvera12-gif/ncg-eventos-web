@@ -271,6 +271,21 @@
       setTimeout(killFloatingWA, 600);
       setTimeout(killFloatingWA, 1500);
     })();
+    // Move Galería right after Inicio (hero) on the landing
+    (function () {
+      function reorder() {
+        var inicio = document.getElementById('inicio');
+        var gal = document.getElementById('galeria');
+        if (!inicio || !gal) return false;
+        if (gal.previousElementSibling === inicio) return true;
+        inicio.parentNode.insertBefore(gal, inicio.nextSibling);
+        return true;
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', reorder);
+      else reorder();
+      setTimeout(reorder, 600);
+      setTimeout(reorder, 1500);
+    })();
   </script>
   <noscript>
     <style>#__bundler_loading { display: none; }</style>

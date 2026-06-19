@@ -271,6 +271,106 @@
       setTimeout(killFloatingWA, 600);
       setTimeout(killFloatingWA, 1500);
     })();
+    // Interactive balloons in the hero — click to "pop" with confetti + respawn
+    (function () {
+      // ─── tunables (ajustá acá) ────────────────────────────────
+      var PARTICLE_COUNT  = 12;     // cantidad de partículas por explosión
+      var RESPAWN_MS      = 1400;   // ms hasta que el globo vuelve a aparecer
+      var BURST_RADIUS    = 70;     // radio máximo de las partículas (px)
+      var BURST_MS        = 380;    // duración de la animación de explosión (ms)
+      var REPOSITION_PCT  = 6;      // variación de left% al reaparecer (jitter posicional)
+      var HOVER_FLOAT_AMP = 4;      // amplitud (px) del hover sutil; subir = más vivo
+      // ──────────────────────────────────────────────────────────
+
+      function injectCss() {
+        if (document.getElementById('ncg-balloon-css')) return;
+        var s = document.createElement('style');
+        s.id = 'ncg-balloon-css';
+        s.textContent =
+          '.ncg-balloon-wrap{display:inline-block;cursor:pointer;position:relative;transform-origin:center;will-change:transform,opacity;transition:transform .25s ease-out}' +
+          '.ncg-balloon-wrap:hover{transform:translateY(-' + HOVER_FLOAT_AMP + 'px) scale(1.05)}' +
+          '@keyframes ncgBalloonBurst{0%{transform:scale(1);opacity:1}45%{transform:scale(1.25);opacity:.9}100%{transform:scale(.15);opacity:0}}' +
+          '@keyframes ncgBalloonReturn{0%{transform:scale(.25);opacity:0}65%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}' +
+          '@keyframes ncgConfettiOut{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--cx,0),var(--cy,0)) scale(.55);opacity:0}}' +
+          '.ncg-confetti{position:absolute;width:6px;height:6px;border-radius:50%;pointer-events:none;animation:ncgConfettiOut .85s ease-out forwards;left:50%;top:50%;margin:-3px 0 0 -3px}';
+        document.head.appendChild(s);
+      }
+
+      function init() {
+        var hero = document.getElementById('inicio');
+        if (!hero) return false;
+        // un globo = svg con un ellipse adentro
+        var svgs = Array.from(hero.querySelectorAll('svg')).filter(function (s) {
+          return s.querySelector('ellipse') && !s.closest('.ncg-balloon-wrap');
+        });
+        if (!svgs.length) return false;
+        injectCss();
+        svgs.forEach(wireBalloon);
+        return true;
+      }
+
+      function wireBalloon(svg) {
+        var fill = svg.querySelector('ellipse').getAttribute('fill') || '#DAAE4E';
+        // envolvemos el svg en un span propio para no pelear con animaciones del padre
+        var wrap = document.createElement('span');
+        wrap.className = 'ncg-balloon-wrap';
+        wrap.__ncgFill = fill;
+        wrap.__ncgOrigLeft = svg.parentElement && svg.parentElement.style.left;
+        svg.parentNode.insertBefore(wrap, svg);
+        wrap.appendChild(svg);
+        // event listeners — click cubre tap en mobile
+        wrap.addEventListener('click', popBalloon);
+      }
+
+      function popBalloon(e) {
+        var wrap = e.currentTarget;
+        if (wrap.__popping) return;
+        wrap.__popping = true;
+
+        // 1) Partículas: aparecen desde el centro del globo y vuelan radialmente
+        var color = wrap.__ncgFill || '#DAAE4E';
+        for (var i = 0; i < PARTICLE_COUNT; i++) {
+          var d = document.createElement('span');
+          d.className = 'ncg-confetti';
+          d.style.background = color;
+          var angle = (i / PARTICLE_COUNT) * Math.PI * 2 + (Math.random() * 0.6 - 0.3);
+          var dist = BURST_RADIUS * (0.55 + Math.random() * 0.5);
+          d.style.setProperty('--cx', (Math.cos(angle) * dist).toFixed(1) + 'px');
+          d.style.setProperty('--cy', (Math.sin(angle) * dist).toFixed(1) + 'px');
+          wrap.appendChild(d);
+          (function (el) { setTimeout(function () { el.remove(); }, 900); })(d);
+        }
+
+        // 2) Explosión del globo
+        wrap.style.animation = 'ncgBalloonBurst ' + BURST_MS + 'ms ease-out forwards';
+
+        // 3) Lo escondemos al terminar la explosión (queda invisible pero ocupa el lugar)
+        setTimeout(function () {
+          wrap.style.visibility = 'hidden';
+          // reposiciono un poco al padre, si tiene left en %
+          var parent = wrap.parentElement;
+          if (parent && parent.__ncgOrigLeft === undefined) parent.__ncgOrigLeft = parent.style.left;
+          if (parent && parent.style.left && /(\d+(\.\d+)?)\s*%/.test(parent.style.left)) {
+            var orig = parseFloat(parent.__ncgOrigLeft || parent.style.left);
+            var pct  = orig + (Math.random() * REPOSITION_PCT * 2 - REPOSITION_PCT);
+            parent.style.left = Math.max(0, Math.min(100, pct)) + '%';
+          }
+        }, BURST_MS);
+
+        // 4) Reaparece con fade + scale suave
+        setTimeout(function () {
+          wrap.style.visibility = 'visible';
+          wrap.style.animation = 'ncgBalloonReturn 720ms cubic-bezier(.4,1.55,.55,1) forwards';
+          wrap.__popping = false;
+        }, RESPAWN_MS);
+      }
+
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+      else init();
+      setTimeout(init, 700);   // por si el bundler renderiza tarde
+      setTimeout(init, 1800);
+    })();
+
     // Move Galería right after Inicio (hero) on the landing
     (function () {
       function reorder() {

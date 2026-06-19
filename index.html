@@ -271,28 +271,33 @@
       setTimeout(killFloatingWA, 600);
       setTimeout(killFloatingWA, 1500);
     })();
-    // Interactive balloons in the hero — click to "pop" with confetti + respawn
+    // Interactive balloons in the hero — squash → burst → fragments scatter → re-gather → restore
     (function () {
-      // ─── tunables (ajustá acá) ────────────────────────────────
-      var PARTICLE_COUNT  = 12;     // cantidad de partículas por explosión
-      var RESPAWN_MS      = 1400;   // ms hasta que el globo vuelve a aparecer
-      var BURST_RADIUS    = 70;     // radio máximo de las partículas (px)
-      var BURST_MS        = 380;    // duración de la animación de explosión (ms)
-      var REPOSITION_PCT  = 6;      // variación de left% al reaparecer (jitter posicional)
-      var HOVER_FLOAT_AMP = 4;      // amplitud (px) del hover sutil; subir = más vivo
-      // ──────────────────────────────────────────────────────────
+      // ─── tunables (ajustá acá) ──────────────────────────────────────────
+      var FRAGMENT_COUNT   = 9;     // cantidad de fragmentos del globo al explotar
+      var SPARKLE_COUNT    = 7;     // partículas/destellos extra (sutiles)
+      var POP_SQUASH_MS    = 130;   // duración de la tensión (squash/stretch) previo
+      var FRAGMENT_FLY_MS  = 620;   // duración del vuelo + caída de fragmentos
+      var HOLD_MS          = 480;   // tiempo (ms) que los fragmentos quedan dispersos
+      var RESTORE_MS       = 560;   // duración de la reconstrucción (convergencia)
+      var REVEAL_MS        = 320;   // fade-in del globo restaurado
+      var BURST_RADIUS     = 64;    // distancia máxima radial de los fragmentos (px)
+      var FALL_DISTANCE    = 28;    // caída vertical extra (gravedad), en px
+      var HOVER_FLOAT_AMP  = 4;     // elevación al hover (desktop) en px
+      var REPOSITION_PCT   = 4;     // jitter horizontal del padre al reaparecer (%)
+      // ────────────────────────────────────────────────────────────────────
 
       function injectCss() {
         if (document.getElementById('ncg-balloon-css')) return;
         var s = document.createElement('style');
         s.id = 'ncg-balloon-css';
         s.textContent =
-          '.ncg-balloon-wrap{display:inline-block;cursor:pointer;position:relative;transform-origin:center;will-change:transform,opacity;transition:transform .25s ease-out}' +
-          '.ncg-balloon-wrap:hover{transform:translateY(-' + HOVER_FLOAT_AMP + 'px) scale(1.05)}' +
-          '@keyframes ncgBalloonBurst{0%{transform:scale(1);opacity:1}45%{transform:scale(1.25);opacity:.9}100%{transform:scale(.15);opacity:0}}' +
-          '@keyframes ncgBalloonReturn{0%{transform:scale(.25);opacity:0}65%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}' +
-          '@keyframes ncgConfettiOut{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--cx,0),var(--cy,0)) scale(.55);opacity:0}}' +
-          '.ncg-confetti{position:absolute;width:6px;height:6px;border-radius:50%;pointer-events:none;animation:ncgConfettiOut .85s ease-out forwards;left:50%;top:50%;margin:-3px 0 0 -3px}';
+          '.ncg-balloon-wrap{display:inline-block;cursor:pointer;position:relative;transform-origin:center bottom;will-change:transform,opacity;transition:transform .25s cubic-bezier(.4,.0,.2,1)}' +
+          '.ncg-balloon-wrap:hover{transform:translateY(-' + HOVER_FLOAT_AMP + 'px) scale(1.04)}' +
+          '.ncg-balloon-wrap svg{display:block;transition:opacity .12s ease-out, transform .32s cubic-bezier(.34,1.56,.64,1)}' +
+          '.ncg-frag{position:absolute;left:50%;top:50%;border-radius:50%;pointer-events:none;will-change:transform,opacity;transform:translate(-50%,-50%);box-shadow:inset 2px -3px 6px rgba(255,255,255,0.25), inset -3px 2px 4px rgba(0,0,0,0.08)}' +
+          '.ncg-spark{position:absolute;left:50%;top:50%;width:5px;height:5px;border-radius:50%;background:#FCF6EC;pointer-events:none;margin:-2.5px 0 0 -2.5px;box-shadow:0 0 8px 2px rgba(252,246,236,0.7);animation:ncgSpark .75s ease-out forwards}' +
+          '@keyframes ncgSpark{0%{transform:translate(0,0) scale(.4);opacity:0}25%{opacity:1}100%{transform:translate(var(--sx,0),var(--sy,0)) scale(.2);opacity:0}}';
         document.head.appendChild(s);
       }
 
@@ -311,58 +316,109 @@
 
       function wireBalloon(svg) {
         var fill = svg.querySelector('ellipse').getAttribute('fill') || '#DAAE4E';
-        // envolvemos el svg en un span propio para no pelear con animaciones del padre
         var wrap = document.createElement('span');
         wrap.className = 'ncg-balloon-wrap';
         wrap.__ncgFill = fill;
-        wrap.__ncgOrigLeft = svg.parentElement && svg.parentElement.style.left;
+        // tamaño del fragmento basado en el ancho del globo
+        wrap.__ncgRadius = Math.max(7, Math.round(svg.clientWidth / 7));
         svg.parentNode.insertBefore(wrap, svg);
         wrap.appendChild(svg);
-        // event listeners — click cubre tap en mobile
         wrap.addEventListener('click', popBalloon);
       }
 
+      // estados: idle → squash → exploded → restoring → idle
       function popBalloon(e) {
         var wrap = e.currentTarget;
-        if (wrap.__popping) return;
-        wrap.__popping = true;
-
-        // 1) Partículas: aparecen desde el centro del globo y vuelan radialmente
+        if (wrap.__state && wrap.__state !== 'idle') return;
+        wrap.__state = 'squash';
+        var svg = wrap.querySelector('svg');
         var color = wrap.__ncgFill || '#DAAE4E';
-        for (var i = 0; i < PARTICLE_COUNT; i++) {
-          var d = document.createElement('span');
-          d.className = 'ncg-confetti';
-          d.style.background = color;
-          var angle = (i / PARTICLE_COUNT) * Math.PI * 2 + (Math.random() * 0.6 - 0.3);
-          var dist = BURST_RADIUS * (0.55 + Math.random() * 0.5);
-          d.style.setProperty('--cx', (Math.cos(angle) * dist).toFixed(1) + 'px');
-          d.style.setProperty('--cy', (Math.sin(angle) * dist).toFixed(1) + 'px');
-          wrap.appendChild(d);
-          (function (el) { setTimeout(function () { el.remove(); }, 900); })(d);
-        }
+        var R = wrap.__ncgRadius || 9;
 
-        // 2) Explosión del globo
-        wrap.style.animation = 'ncgBalloonBurst ' + BURST_MS + 'ms ease-out forwards';
+        // 1) Squash/Stretch: el globo "se tensa" antes de explotar
+        wrap.style.transition = 'transform ' + POP_SQUASH_MS + 'ms cubic-bezier(.5,1.8,.3,.9)';
+        wrap.style.transform = 'scaleX(1.22) scaleY(.78)';
 
-        // 3) Lo escondemos al terminar la explosión (queda invisible pero ocupa el lugar)
         setTimeout(function () {
-          wrap.style.visibility = 'hidden';
-          // reposiciono un poco al padre, si tiene left en %
-          var parent = wrap.parentElement;
-          if (parent && parent.__ncgOrigLeft === undefined) parent.__ncgOrigLeft = parent.style.left;
-          if (parent && parent.style.left && /(\d+(\.\d+)?)\s*%/.test(parent.style.left)) {
-            var orig = parseFloat(parent.__ncgOrigLeft || parent.style.left);
-            var pct  = orig + (Math.random() * REPOSITION_PCT * 2 - REPOSITION_PCT);
-            parent.style.left = Math.max(0, Math.min(100, pct)) + '%';
+          wrap.__state = 'exploded';
+          // 2) Esconder el globo y generar fragmentos en el centro
+          svg.style.opacity = '0';
+          var fragments = [];
+          for (var i = 0; i < FRAGMENT_COUNT; i++) {
+            var f = document.createElement('span');
+            f.className = 'ncg-frag';
+            f.style.background = color;
+            var size = R * (0.85 + Math.random() * 0.55);
+            f.style.width  = size + 'px';
+            f.style.height = (size * (0.7 + Math.random() * 0.55)) + 'px';
+            // destino: ángulo radial + caída vertical
+            var angle = (i / FRAGMENT_COUNT) * Math.PI * 2 + (Math.random() * 0.45 - 0.22);
+            var dist  = BURST_RADIUS * (0.65 + Math.random() * 0.5);
+            var tx    = Math.cos(angle) * dist;
+            var ty    = Math.sin(angle) * dist + FALL_DISTANCE * (0.4 + Math.random() * 0.7);
+            var rot   = (Math.random() * 220 - 110);
+            f.dataset.tx = tx; f.dataset.ty = ty; f.dataset.tr = rot;
+            wrap.appendChild(f);
+            fragments.push(f);
           }
-        }, BURST_MS);
+          // destellos sutiles (sparkles)
+          for (var j = 0; j < SPARKLE_COUNT; j++) {
+            var sp = document.createElement('span');
+            sp.className = 'ncg-spark';
+            var sa = Math.random() * Math.PI * 2;
+            var sd = BURST_RADIUS * (0.35 + Math.random() * 0.45);
+            sp.style.setProperty('--sx', (Math.cos(sa) * sd).toFixed(1) + 'px');
+            sp.style.setProperty('--sy', (Math.sin(sa) * sd).toFixed(1) + 'px');
+            wrap.appendChild(sp);
+            (function (el) { setTimeout(function () { el.remove(); }, 800); })(sp);
+          }
+          // soltar el squash a la vez que los fragmentos vuelan
+          wrap.style.transition = 'transform 120ms ease-out';
+          wrap.style.transform  = 'scale(1)';
 
-        // 4) Reaparece con fade + scale suave
-        setTimeout(function () {
-          wrap.style.visibility = 'visible';
-          wrap.style.animation = 'ncgBalloonReturn 720ms cubic-bezier(.4,1.55,.55,1) forwards';
-          wrap.__popping = false;
-        }, RESPAWN_MS);
+          // 3) Vuelo + caída con easing suave
+          requestAnimationFrame(function () {
+            fragments.forEach(function (f) {
+              f.style.transition = 'transform ' + FRAGMENT_FLY_MS + 'ms cubic-bezier(.22,.85,.38,1), opacity ' + FRAGMENT_FLY_MS + 'ms ease-out';
+              f.style.transform  = 'translate(-50%,-50%) translate(' + f.dataset.tx + 'px,' + f.dataset.ty + 'px) rotate(' + f.dataset.tr + 'deg)';
+              f.style.opacity    = '0.74';
+            });
+          });
+
+          // 4) Tras el hold, los fragmentos convergen de vuelta al centro
+          setTimeout(function () {
+            wrap.__state = 'restoring';
+            // jitter de posición horizontal del padre, sutil
+            var parent = wrap.parentElement;
+            if (parent && parent.__ncgOrigLeft === undefined) parent.__ncgOrigLeft = parent.style.left;
+            if (parent && parent.style.left && /(\d+(\.\d+)?)\s*%/.test(parent.style.left)) {
+              var orig = parseFloat(parent.__ncgOrigLeft || parent.style.left);
+              var pct  = orig + (Math.random() * REPOSITION_PCT * 2 - REPOSITION_PCT);
+              parent.style.left = Math.max(0, Math.min(100, pct)) + '%';
+            }
+            fragments.forEach(function (f) {
+              f.style.transition = 'transform ' + RESTORE_MS + 'ms cubic-bezier(.4,0,.2,1), opacity ' + RESTORE_MS + 'ms ease-in';
+              f.style.transform  = 'translate(-50%,-50%) translate(0px,0px) rotate(0deg) scale(.45)';
+              f.style.opacity    = '0.95';
+            });
+
+            // 5) Reaparece el globo con un suave overshoot
+            setTimeout(function () {
+              svg.style.transition = 'opacity ' + REVEAL_MS + 'ms ease-out, transform ' + REVEAL_MS + 'ms cubic-bezier(.34,1.56,.64,1)';
+              svg.style.transform  = 'scale(1.06)';
+              svg.style.opacity    = '1';
+              fragments.forEach(function (f) {
+                f.style.transition = 'opacity ' + (REVEAL_MS - 40) + 'ms ease-in';
+                f.style.opacity    = '0';
+              });
+              setTimeout(function () {
+                fragments.forEach(function (f) { f.remove(); });
+                svg.style.transform = '';
+                wrap.__state = 'idle';
+              }, REVEAL_MS);
+            }, RESTORE_MS);
+          }, FRAGMENT_FLY_MS + HOLD_MS);
+        }, POP_SQUASH_MS);
       }
 
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
